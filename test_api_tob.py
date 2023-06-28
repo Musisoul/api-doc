@@ -26,7 +26,7 @@ def get_token(email, password):
     return response
 
 
-def task_submit(token, model_name='Artist_V0.1.3', prompt="one girl", neg_prompt="", n_images=2,
+def task_submit(token, model_name='Artist v0.3.0 Beta', prompt="one girl", neg_prompt="", n_images=2,
                    scale=7, output_size="960x960", select_seed=-1, init_img="", controlnet_model=""):
     """
     发起任务
@@ -108,9 +108,9 @@ def get_generation_form():
         "info": [
             {
             "choices": [
-                "Artist_V0.1.3",
+                "Artist v0.3.0 Beta",
             ], 
-            "default": "Artist_V0.1.3", 
+            "default": "Artist v0.3.0 Beta", 
             "description": "model name", 
             "name": "model_name", 
             "type": "list"

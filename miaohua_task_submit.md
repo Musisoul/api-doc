@@ -47,9 +47,9 @@ print(response.text)
 | 参数名称     | 类型     | 是否必须  | 默认值              | 含义                                                      |
 | ----------- | --------| -------  | ----------------- | --------------------------------------------------------- |
 | token       | string  | 是       | 无，通过get_token获得 | 通过get_token获取的token                                  |
-| model_name  | string  | 是       | Artist_V0.1.3     | 模型名称(可选值: 通过/api/v1b/get_generation_form获得)        |
+| model_name  | string  | 是       | Artist v0.3.0 Beta  | 模型名称(可选值: 通过/api/v1b/get_generation_form获得)        |
 | prompt      | string  | 是       | ""                | 用于生成图片的特征描述，如："one girl,beautiful"               |
-| neg_prompt  | string  | 无       | ""                | 特征的反向描述，如："unsafe"                                  |
+| neg_prompt  | string  | 否       | ""                | 特征的反向描述，如："unsafe"                                  |
 | n_images    | int     | 是       | 2                 | 生成图片数量                                                 |
 | scale       | int     | 是       | 7                 | 文本控制力度(1-20)                                           |
 | select_seed | int     | 否       | -1                | 随机数种子                                                   |
@@ -65,7 +65,7 @@ print(response.text)
 curl http://miaohua.sensetime.com/api/v1b/task_submit \
   -H "Content-Type: application/json" \
   -d '{
-    "model_name": "Artist_V0.1.3",
+    "model_name": "Artist v0.3.0 Beta",
     "prompt": "one girl, beautiful",
     "neg_prompt": "unsafe", 
     "n_images": 2,
@@ -85,7 +85,7 @@ import requests
 
 url = 'http://miaohua.sensetime.com/api/v1b/task_submit'  
 data = {
-    "model_name": "Artist_V0.1.3", # string 用到的模型名称（规定范围内）
+    "model_name": "Artist v0.3.0 Beta", # string 用到的模型名称（规定范围内）
     "prompt": "one girl, beautiful", # 正向描述词
     "neg_prompt": "unsafe", # 反向描述词
     "n_images": 2, # int 生成图片的数量
@@ -193,6 +193,48 @@ print(response.text)
 }
 ~~~
 
+
+### 图生文 img2txt (同步接口)
+
+#### 创建访问
+
+> POST       http://miaohua.sensetime.com/api/v1b/img2txt
+
+#### 请求参数
+
+| 参数名称 | 类型   | 是否必须 | 默认值 | 含义                                |
+| -------- | ------ | -------- | ------ | -------------------------------|
+| init_img  | string | 是       | 无      | 初始图片路径                    |
+| token    | string | 是       | 无      | 由get_token获取的token          |
+
+##### 请求示例
+
+**python示例**
+
+~~~python
+import requests
+
+url = 'http://miaohua.sensetime.com/api/v1b/img2txt'  
+data = {
+    "init_img": "https://bkmk.oss-accelerate.aliyuncs.com/900ea63e-e1dd-11ed-bef5-00163e005161?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317042257726&Signature=x7nUVN6xpDustx4K02WOTjuty4Q%3D", # 初始图片url
+    "token": "", # get_token获取的token
+}  
+
+response = requests.post(url, json=data)
+
+print(response.json())
+~~~
+
+##### 返回示例
+
+~~~json
+{
+  "code": 0,
+  "info": "a very large clock tower with many other buildings behind it", # 图生文返回信息
+  "msg": ""
+}
+~~~
+
 ### 获取生成表单
 
 > GET       http://miaohua.sensetime.com/api/v1b/get_generation_form
@@ -223,9 +265,9 @@ print(response.text)
   "info": [
     {
       "choices": [
-        "Artist_V0.1.3",
+        "Artist v0.3.0 Beta",
       ], 
-      "default": "Artist_V0.1.3", 
+      "default": "Artist v0.3.0 Beta", 
       "description": "model name", 
       "name": "model_name", 
       "type": "list"
