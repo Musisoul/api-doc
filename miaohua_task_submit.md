@@ -56,6 +56,7 @@ print(response.text)
 | output_size | string  | 是       | 960x960           | 图片的输出尺寸，如："960x960"                                 |
 | init_img    | string  | 否       | ""                | 输入图片，url形式，若有即为i2i(图生图)，无即为t2i(文生图)。当'controlnet_model'参数非空时，init_img为controlnet的输入图片         |
 | controlnet_model    | string  | 否       | ""                | 若为空则不启用controlnet,可选值为"openpose","canny","depth","fake_scribble","scribble","hed","hough","normal","seg" (目前canny已启用)         |
+| add_prompt | bool     | 否       | false                | 是否使用gpt进行描述词优化                                  |
 
 ##### 请求示例
 
@@ -94,6 +95,7 @@ data = {
     "select_seed": -1, # int 随机数种子。如果是-1的话代表不指定
     "init_img": "", # img url,若为空为文生图，否则为图生图
     "controlnet_model": "", # controlnet模型，若为空则不启用controlnet,启用时需要init_img不为空
+    "add_prompt": False, # 是否使用gpt进行描述词优化
     "token": "",  # get_token获取的token
 }  
 
