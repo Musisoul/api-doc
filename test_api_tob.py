@@ -2,7 +2,7 @@ import requests
 
 email = 'xxx@example.com'
 password = 'xxx'
-base_url = "http://miaohua.sensetime.com/api/v1b"
+base_url = "https://miaohua.sensetime.com/api/v1b"
 
 def get_token(email, password):
     """

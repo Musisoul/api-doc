@@ -3,7 +3,7 @@
 
 ### 获取token
 #### 创建访问
-> POST   http://miaohua.sensetime.com/api/v1b/get_token
+> POST   https://miaohua.sensetime.com/api/v1b/get_token
 #### 请求参数
 | 参数名称     | 类型     | 是否必须  | 默认值              | 含义                                                     |
 | ----------- | --------| -------  | -------------------| --------------------------------------------------------|
@@ -16,7 +16,7 @@
 ~~~python
 import requests
 
-url = 'http://miaohua.sensetime.com/api/v1b/get_token'  
+url = 'https://miaohua.sensetime.com/api/v1b/get_token'  
 data = {
    "email": "xxx@example.com",
    "password": "password",
@@ -40,16 +40,16 @@ print(response.text)
 
 #### 创建访问
 
-> POST   http://miaohua.sensetime.com/api/v1b/task_submit
+> POST   https://miaohua.sensetime.com/api/v1b/task_submit
 
 #### 请求参数
 
 | 参数名称     | 类型     | 是否必须  | 默认值              | 含义                                                      |
 | ----------- | --------| -------  | ----------------- | --------------------------------------------------------- |
 | token       | string  | 是       | 无，通过get_token获得 | 通过get_token获取的token                                  |
-| model_name  | string  | 是       | Artist v0.3.0 Beta  | 模型名称(可选值: 通过/api/v1b/get_generation_form获得)        |
+| model_name  | string  | 是       | Artist v0.3.0 Beta  | 模型名称(可选值: 通过/api/v1b/get_generation_form获得)      |
 | prompt      | string  | 是       | ""                | 用于生成图片的特征描述，如："one girl,beautiful"               |
-| neg_prompt  | string  | 否       | ""                | 特征的反向描述，如："unsafe"                                  |
+| neg_prompt  | string  | 否       | ""                | 特征的反向描述，一般无需指定                                    |
 | n_images    | int     | 是       | 2                 | 生成图片数量                                                 |
 | scale       | int     | 是       | 7                 | 文本控制力度(1-20)                                           |
 | select_seed | int     | 否       | -1                | 随机数种子                                                   |
@@ -63,12 +63,12 @@ print(response.text)
 **curl 示例**
 
 ~~~
-curl http://miaohua.sensetime.com/api/v1b/task_submit \
+curl https://miaohua.sensetime.com/api/v1b/task_submit \
   -H "Content-Type: application/json" \
   -d '{
     "model_name": "Artist v0.3.0 Beta",
     "prompt": "one girl, beautiful",
-    "neg_prompt": "unsafe", 
+    "neg_prompt": "", 
     "n_images": 2,
     "scale": 7, 
     "output_size": "960x960",
@@ -84,11 +84,11 @@ curl http://miaohua.sensetime.com/api/v1b/task_submit \
 ~~~python
 import requests
 
-url = 'http://miaohua.sensetime.com/api/v1b/task_submit'  
+url = 'https://miaohua.sensetime.com/api/v1b/task_submit'  
 data = {
     "model_name": "Artist v0.3.0 Beta", # string 用到的模型名称（规定范围内）
     "prompt": "one girl, beautiful", # 正向描述词
-    "neg_prompt": "unsafe", # 反向描述词
+    "neg_prompt": "", # 反向描述词
     "n_images": 2, # int 生成图片的数量
     "scale": 7, # int 文本控制力度
     "output_size": "960x960", # string 生成的图片尺寸
@@ -117,7 +117,7 @@ print(response.text)
 
 #### 创建访问
 
-> POST       http://miaohua.sensetime.com/api/v1b/task_result
+> POST       https://miaohua.sensetime.com/api/v1b/task_result
 
 #### 请求参数
 
@@ -131,7 +131,7 @@ print(response.text)
 **curl 示例**
 
 ~~~
-curl http://miaohua.sensetime.com/api/v1b/task_result \
+curl https://miaohua.sensetime.com/api/v1b/task_result \
   -H "Content-Type: application/json" \
   -d '{
         "task_id": "f3e5b59c-7416-11ed-a160-00163e025c94",
@@ -144,7 +144,7 @@ curl http://miaohua.sensetime.com/api/v1b/task_result \
 ~~~python
 import requests
 
-url = 'http://miaohua.sensetime.com/api/v1b/task_result'  
+url = 'https://miaohua.sensetime.com/api/v1b/task_result'  
 data = {
     "task_id": "f3e5b59c-7416-11ed-a160-00163e025c94", # string 任务id
     "token": "", # get_token获取的token
@@ -200,7 +200,7 @@ print(response.text)
 
 #### 创建访问
 
-> POST       http://miaohua.sensetime.com/api/v1b/img2txt
+> POST       https://miaohua.sensetime.com/api/v1b/img2txt
 
 #### 请求参数
 
@@ -216,7 +216,7 @@ print(response.text)
 ~~~python
 import requests
 
-url = 'http://miaohua.sensetime.com/api/v1b/img2txt'  
+url = 'https://miaohua.sensetime.com/api/v1b/img2txt'  
 data = {
     "init_img": "https://bkmk.oss-accelerate.aliyuncs.com/900ea63e-e1dd-11ed-bef5-00163e005161?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317042257726&Signature=x7nUVN6xpDustx4K02WOTjuty4Q%3D", # 初始图片url
     "token": "", # get_token获取的token
@@ -239,7 +239,7 @@ print(response.json())
 
 ### 获取生成表单
 
-> GET       http://miaohua.sensetime.com/api/v1b/get_generation_form
+> GET       https://miaohua.sensetime.com/api/v1b/get_generation_form
 
 #### 请求参数
 
@@ -252,7 +252,7 @@ print(response.json())
 ~~~python
 import requests
 
-url = 'http://miaohua.sensetime.com/api/v1b/get_generation_form'  
+url = 'https://miaohua.sensetime.com/api/v1b/get_generation_form'  
 
 response = requests.get(url)
 
@@ -359,7 +359,7 @@ print(response.text)
 
 ### 批量上传图片
 #### 创建访问
-> POST       http://miaohua.sensetime.com/api/v1b/upload_imgs
+> POST       https://miaohua.sensetime.com/api/v1b/upload_imgs
 
 #### 请求参数
 files形式
@@ -376,7 +376,7 @@ files形式
 ~~~python
 import requests
 
-url = 'http://miaohua.sensetime.com/api/v1b/upload_imgs'
+url = 'https://miaohua.sensetime.com/api/v1b/upload_imgs'
 # files的列表格式，以init_img为key
 img_paths = ['/local/pic1.png', '/local/pic2.png',]  
 files = [('init_img', open(img_path, 'rb')) for img_path in img_paths]
@@ -404,7 +404,7 @@ print(response.json())
 
 ### 创建数据集
 #### 创建访问
-> POST       http://miaohua.sensetime.com/api/v1b/dataset
+> POST       https://miaohua.sensetime.com/api/v1b/dataset
 
 #### 请求参数
 
@@ -422,7 +422,7 @@ print(response.json())
 ~~~python
 import requests
 
-url = 'http://miaohua.sensetime.com/api/v1b/dataset'  
+url = 'https://miaohua.sensetime.com/api/v1b/dataset'  
 data = {
   "token": "xxxx", # get_token获取到的token
   "name": "dataset1", # 数据集名称
@@ -447,7 +447,7 @@ print(response.text)
 
 ### 获取已创建的全部数据集
 #### 创建访问
-> POST       http://miaohua.sensetime.com/api/v1b/dataset_all
+> POST       https://miaohua.sensetime.com/api/v1b/dataset_all
 
 #### 请求参数
 
@@ -462,7 +462,7 @@ print(response.text)
 ~~~python
 import requests
 
-url = 'http://miaohua.sensetime.com/api/v1b/dataset_all'  
+url = 'https://miaohua.sensetime.com/api/v1b/dataset_all'  
 data = {
   "token": "xxx", # get_token获取到的token
 }  
@@ -516,7 +516,7 @@ print(response.text)
 
 #### 创建访问
 
-> POST       http://miaohua.sensetime.com/api/v1b/train_submit
+> POST       https://miaohua.sensetime.com/api/v1b/train_submit
 
 #### 请求参数
 
@@ -538,7 +538,7 @@ print(response.text)
 ~~~python
 import requests
 
-url = 'http://miaohua.sensetime.com/api/v1b/train_submit'  
+url = 'https://miaohua.sensetime.com/api/v1b/train_submit'  
 data = {
     "token": "", # get_token获取的token
     "name": "train model1", # 训练的模型名称
@@ -566,7 +566,7 @@ print(response.text)
 
 #### 创建访问
 
-> POST       http://miaohua.sensetime.com/api/v1b/train_progress
+> POST       https://miaohua.sensetime.com/api/v1b/train_progress
 
 #### 请求参数
 
@@ -582,7 +582,7 @@ print(response.text)
 ~~~python
 import requests
 
-url = 'http://miaohua.sensetime.com/api/v1b/train_progress'  
+url = 'https://miaohua.sensetime.com/api/v1b/train_progress'  
 data = {
     "token": "", # get_token获取的token
     "task_id": "xxxxxx", # 训练任务的task_id
@@ -605,7 +605,7 @@ print(response.text)
 
 #### 创建访问
 
-> GET       http://miaohua.sensetime.com/api/v1b/get_train_form
+> GET       https://miaohua.sensetime.com/api/v1b/get_train_form
 
 #### 请求参数
 
@@ -618,7 +618,7 @@ print(response.text)
 ~~~python
 import requests
 
-url = 'http://miaohua.sensetime.com/api/v1b/get_train_form'  
+url = 'https://miaohua.sensetime.com/api/v1b/get_train_form'  
 
 response = requests.get(url)
 
