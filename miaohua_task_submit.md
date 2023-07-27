@@ -16,15 +16,15 @@
 ~~~python
 import requests
 
-url = 'https://miaohua.sensetime.com/api/v1b/get_token'  
+url = 'https://miaohua.sensetime.com/api/v1b/get_token'
 data = {
    "email": "xxx@example.com",
    "password": "password",
-}  
+}
 
 response = requests.post(url, json=data)
 
-print(response.status_code) 
+print(response.status_code)
 print(response.text)
 ~~~
 
@@ -68,9 +68,9 @@ curl https://miaohua.sensetime.com/api/v1b/task_submit \
   -d '{
     "model_name": "Artist v0.3.0 Beta",
     "prompt": "one girl, beautiful",
-    "neg_prompt": "", 
+    "neg_prompt": "",
     "n_images": 2,
-    "scale": 7, 
+    "scale": 7,
     "output_size": "960x960",
     "select_seed": -1,
     "token": "",
@@ -84,7 +84,7 @@ curl https://miaohua.sensetime.com/api/v1b/task_submit \
 ~~~python
 import requests
 
-url = 'https://miaohua.sensetime.com/api/v1b/task_submit'  
+url = 'https://miaohua.sensetime.com/api/v1b/task_submit'
 data = {
     "model_name": "Artist v0.3.0 Beta", # string 用到的模型名称（规定范围内）
     "prompt": "one girl, beautiful", # 正向描述词
@@ -97,11 +97,11 @@ data = {
     "controlnet_model": "", # controlnet模型，若为空则不启用controlnet,启用时需要init_img不为空
     "add_prompt": False, # 是否使用gpt进行描述词优化
     "token": "",  # get_token获取的token
-}  
+}
 
 response = requests.post(url, json=data)
 
-print(response.status_code) 
+print(response.status_code)
 print(response.text)
 ~~~
 
@@ -144,15 +144,15 @@ curl https://miaohua.sensetime.com/api/v1b/task_result \
 ~~~python
 import requests
 
-url = 'https://miaohua.sensetime.com/api/v1b/task_result'  
+url = 'https://miaohua.sensetime.com/api/v1b/task_result'
 data = {
     "task_id": "f3e5b59c-7416-11ed-a160-00163e025c94", # string 任务id
     "token": "", # get_token获取的token
-}  
+}
 
 response = requests.post(url, json=data)
 
-print(response.status_code) 
+print(response.status_code)
 print(response.text)
 ~~~
 
@@ -168,7 +168,7 @@ print(response.text)
             'save_index': 0,
             'share': false,
             'shareable': true,
-        }, 
+        },
         {
             'large': "https://pic.bakamaka.io/txt2img-result/2022-12-10/31e17f66-788b-11ed-98e2-00163e025c94_00001.jpg",
             'middle': "https://pic.bakamaka.io/txt2img-result/2022-12-10/31e17f66-788b-11ed-98e2-00163e025c94_00001.mid.jpg",
@@ -196,6 +196,78 @@ print(response.text)
 ~~~
 
 
+### 批量结果查询
+
+#### 创建访问
+
+> POST       https://miaohua.sensetime.com/api/v1b/task_results
+
+#### 请求参数
+
+- 一次可获取多个任务的结果，一次最多不超过50个任务
+- 接口上限为6次/秒，根据实际情况调用
+
+| 参数名称 | 类型   | 是否必须 | 默认值 | 含义                                |
+| -------- | ------ | -------- | ------ | -------------------------------|
+| task_ids  | list | 是       | 无      | 由任务创建接口返回的任务id数组       |
+| token    | string | 是       | 无      | 由get_token获取的token          |
+
+##### 请求示例
+
+**curl 示例**
+
+~~~
+curl https://miaohua.sensetime.com/api/v1b/task_results \
+  -H "Content-Type: application/json" \
+  -d '{
+        "task_ids": [
+          "f3e5b59c-7416-11ed-a160-00163e025c94"
+        ],
+        "token": "",
+  }'
+~~~
+
+**python示例**
+
+~~~python
+import requests
+
+url = 'https://miaohua.sensetime.com/api/v1b/task_results'
+data = {
+    "task_ids": ["f3e5b59c-7416-11ed-a160-00163e025c94"], # string 任务id
+    "token": "", # get_token获取的token
+}
+
+response = requests.post(url, json=data)
+
+print(response.status_code)
+print(response.text)
+~~~
+
+##### 返回示例
+
+~~~json
+{
+    "code": 0,
+    "info": [
+      {
+        "state": "done", // string 任务状态，未完成会是 "pending"
+        "error_msg": "Intern error", // string 错误信息
+        "images": [
+            {
+                "large": "https://pic.bakamaka.io/txt2img-result/2022-12-10/31e17f66-788b-11ed-98e2-00163e025c94_00000.jpg",
+                "middle": "https://pic.bakamaka.io/txt2img-result/2022-12-10/31e17f66-788b-11ed-98e2-00163e025c94_00000.mid.jpg",
+                "save_index": 0,
+                "share": false,
+                "shareable": true,
+            }
+        ],
+      },
+      {...}
+    ]
+}
+~~~
+
 ### 图生文 img2txt (同步接口)
 
 #### 创建访问
@@ -216,11 +288,11 @@ print(response.text)
 ~~~python
 import requests
 
-url = 'https://miaohua.sensetime.com/api/v1b/img2txt'  
+url = 'https://miaohua.sensetime.com/api/v1b/img2txt'
 data = {
     "init_img": "https://bkmk.oss-accelerate.aliyuncs.com/900ea63e-e1dd-11ed-bef5-00163e005161?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317042257726&Signature=x7nUVN6xpDustx4K02WOTjuty4Q%3D", # 初始图片url
     "token": "", # get_token获取的token
-}  
+}
 
 response = requests.post(url, json=data)
 
@@ -252,104 +324,104 @@ print(response.json())
 ~~~python
 import requests
 
-url = 'https://miaohua.sensetime.com/api/v1b/get_generation_form'  
+url = 'https://miaohua.sensetime.com/api/v1b/get_generation_form'
 
 response = requests.get(url)
 
-print(response.status_code) 
+print(response.status_code)
 print(response.text)
 ~~~
 
 ##### 返回示例
 ~~~json
 {
-  "code": 0, 
+  "code": 0,
   "info": [
     {
       "choices": [
         "Artist v0.3.0 Beta",
-      ], 
-      "default": "Artist v0.3.0 Beta", 
-      "description": "model name", 
-      "name": "model_name", 
+      ],
+      "default": "Artist v0.3.0 Beta",
+      "description": "model name",
+      "name": "model_name",
       "type": "list"
-    }, 
+    },
     {
-      "default": "", 
-      "description": "prompt", 
-      "name": "prompt", 
+      "default": "",
+      "description": "prompt",
+      "name": "prompt",
       "type": "string"
-    }, 
+    },
     {
-      "default": "", 
-      "description": "negative prompt", 
-      "name": "neg_prompt", 
+      "default": "",
+      "description": "negative prompt",
+      "name": "neg_prompt",
       "type": "string"
-    }, 
+    },
     {
-      "default": 2, 
-      "description": "number of images", 
-      "max": 8, 
-      "min": 1, 
-      "name": "n_images", 
+      "default": 2,
+      "description": "number of images",
+      "max": 8,
+      "min": 1,
+      "name": "n_images",
       "type": "int"
-    }, 
+    },
     {
-      "default": 7, 
-      "description": "Guidance Scale", 
-      "max": 20, 
-      "min": 1, 
-      "name": "scale", 
+      "default": 7,
+      "description": "Guidance Scale",
+      "max": 20,
+      "min": 1,
+      "name": "scale",
       "type": "int"
-    }, 
+    },
     {
-      "default": -1, 
-      "description": "seed", 
-      "max": 9999999, 
-      "min": 0, 
-      "name": "select_seed", 
+      "default": -1,
+      "description": "seed",
+      "max": 9999999,
+      "min": 0,
+      "name": "select_seed",
       "type": "int"
-    }, 
+    },
     {
       "choices": {
         "1:1": [
-          "512x512", 
-          "640x640", 
-          "768x768", 
+          "512x512",
+          "640x640",
+          "768x768",
           "1024x1024"
-        ], 
+        ],
         "2:3": [
-          "512x768", 
-          "640x960", 
-          "768x1152", 
+          "512x768",
+          "640x960",
+          "768x1152",
           "1024x1536"
-        ], 
+        ],
         "3:2": [
-          "768x512", 
-          "960x640", 
-          "1152x768", 
+          "768x512",
+          "960x640",
+          "1152x768",
           "1536x1024"
         ]
-      }, 
-      "default": "512x512", 
-      "description": "resolution", 
-      "name": "resolution", 
+      },
+      "default": "512x512",
+      "description": "resolution",
+      "name": "resolution",
       "type": "dict"
-    }, 
+    },
     {
-      "default": "", 
-      "description": "init image url", 
-      "name": "init_img", 
+      "default": "",
+      "description": "init image url",
+      "name": "init_img",
       "type": "str"
     },
     {
-      "default": "", 
-      "description": "controlnet model", 
-      "name": "controlnet_model", 
+      "default": "",
+      "description": "controlnet model",
+      "name": "controlnet_model",
       "type": "str",
       "choices": ["", "canny"],
     },
-  ], 
+  ],
   "msg": ""
 }
 
@@ -378,14 +450,14 @@ import requests
 
 url = 'https://miaohua.sensetime.com/api/v1b/upload_imgs'
 # files的列表格式，以init_img为key
-img_paths = ['/local/pic1.png', '/local/pic2.png',]  
+img_paths = ['/local/pic1.png', '/local/pic2.png',]
 files = [('init_img', open(img_path, 'rb')) for img_path in img_paths]
 files.append(('token', token))
 
 
 response = requests.post(url, files=files)
 
-print(response.status_code) 
+print(response.status_code)
 print(response.json())
 ~~~
 
@@ -412,8 +484,8 @@ print(response.json())
 | ----------- | --------| -------  | ----------------- | ---------------------------------------------------------- |
 | token       | string  | 是       | 无，通过get_token获得 | 通过get_token获取的token                                   |
 | name        | string  | 是       | 无                  | 数据集名称                                                  |
-| description | string  | 否       | ""                |  数据集描述                                                   | 
-| images      | list    | 是       | 无                 | 图片列表, url list，可通过批量上传图片接口/api/v1b/upload_imgs获取|             
+| description | string  | 否       | ""                |  数据集描述                                                   |
+| images      | list    | 是       | 无                 | 图片列表, url list，可通过批量上传图片接口/api/v1b/upload_imgs获取|
 
 ##### 请求示例
 
@@ -422,7 +494,7 @@ print(response.json())
 ~~~python
 import requests
 
-url = 'https://miaohua.sensetime.com/api/v1b/dataset'  
+url = 'https://miaohua.sensetime.com/api/v1b/dataset'
 data = {
   "token": "xxxx", # get_token获取到的token
   "name": "dataset1", # 数据集名称
@@ -431,11 +503,11 @@ data = {
     "https://bkmk.oss-accelerate.aliyuncs.com/900ea63e-e1dd-11ed-bef5-00163e005161?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317042257726&Signature=x7nUVN6xpDustx4K02WOTjuty4Q%3D",
     "https://bkmk.oss-accelerate.aliyuncs.com/91d5e7d4-e1dd-11ed-bef5-00163e005161?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317042257730&Signature=d1weIkwFwVK9nbCrPNdkeVm1wQA%3D"
   ] # 图片列表，url list
-}  
+}
 
 response = requests.post(url, json=data)
 
-print(response.status_code) 
+print(response.status_code)
 print(response.text)
 ~~~
 
@@ -462,14 +534,14 @@ print(response.text)
 ~~~python
 import requests
 
-url = 'https://miaohua.sensetime.com/api/v1b/dataset_all'  
+url = 'https://miaohua.sensetime.com/api/v1b/dataset_all'
 data = {
   "token": "xxx", # get_token获取到的token
-}  
+}
 
 response = requests.post(url, json=data)
 
-print(response.status_code) 
+print(response.status_code)
 print(response.text)
 ~~~
 
@@ -538,7 +610,7 @@ print(response.text)
 ~~~python
 import requests
 
-url = 'https://miaohua.sensetime.com/api/v1b/train_submit'  
+url = 'https://miaohua.sensetime.com/api/v1b/train_submit'
 data = {
     "token": "", # get_token获取的token
     "name": "train model1", # 训练的模型名称
@@ -548,11 +620,11 @@ data = {
     "main_body": "Style", # 主体
     "nsfw": 0, # 1为true, 0为false
     "dataset": [5, 7], # 选择的数据集的id组合，list
-}  
+}
 
 response = requests.post(url, json=data)
 
-print(response.status_code) 
+print(response.status_code)
 print(response.text)
 ~~~
 
@@ -582,15 +654,15 @@ print(response.text)
 ~~~python
 import requests
 
-url = 'https://miaohua.sensetime.com/api/v1b/train_progress'  
+url = 'https://miaohua.sensetime.com/api/v1b/train_progress'
 data = {
     "token": "", # get_token获取的token
     "task_id": "xxxxxx", # 训练任务的task_id
-}  
+}
 
 response = requests.post(url, json=data)
 
-print(response.status_code) 
+print(response.status_code)
 print(response.text)
 ~~~
 
@@ -618,11 +690,11 @@ print(response.text)
 ~~~python
 import requests
 
-url = 'https://miaohua.sensetime.com/api/v1b/get_train_form'  
+url = 'https://miaohua.sensetime.com/api/v1b/get_train_form'
 
 response = requests.get(url)
 
-print(response.status_code) 
+print(response.status_code)
 print(response.text)
 ~~~
 
