@@ -255,11 +255,12 @@ print(response.text)
         "error_msg": "Intern error", // string 错误信息
         "images": [
             {
+                "task_id": "f3e5b59c-7416-11ed-a160-00163e025c94",
+                "task_type": "txt2img",
                 "large": "https://pic.bakamaka.io/txt2img-result/2022-12-10/31e17f66-788b-11ed-98e2-00163e025c94_00000.jpg",
                 "middle": "https://pic.bakamaka.io/txt2img-result/2022-12-10/31e17f66-788b-11ed-98e2-00163e025c94_00000.mid.jpg",
-                "save_index": 0,
-                "share": false,
-                "shareable": true,
+                "small": "https://pic.bakamaka.io/txt2img-result/2022-12-10/31e17f66-788b-11ed-98e2-00163e025c94_00000.mid.jpg",
+                "save_index": 0
             }
         ],
       },
