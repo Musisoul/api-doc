@@ -465,8 +465,7 @@ print(response.json())
 {
   "code": 0,
   "info": [
-    "https://bkmk.oss-accelerate.aliyuncs.com/900ea63e-e1dd-11ed-bef5-00163e005161?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317042257726&Signature=x7nUVN6xpDustx4K02WOTjuty4Q%3D",
-    "https://bkmk.oss-accelerate.aliyuncs.com/91d5e7d4-e1dd-11ed-bef5-00163e005161?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317042257730&Signature=d1weIkwFwVK9nbCrPNdkeVm1wQA%3D"
+    "https://bkmk.oss-accelerate.aliyuncs.com/900ea63e-e1dd-11ed-bef5-00163e005161?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317042257726&Signature=x7nUVN6xpDustx4K02WOTjuty4Q%3D"
   ],
   "msg": ""
 }
