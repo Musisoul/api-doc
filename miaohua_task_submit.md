@@ -430,16 +430,60 @@ print(response.text)
 
 ## 以下为训练相关
 
-### 批量上传图片
+### 上传图片
 #### 创建访问
-> POST       https://miaohua.sensetime.com/api/v1b/upload_imgs
+
+> POST       https://miaohua.sensetime.com/api/v1b/upload_img
+> Authorization: Bearer token_string
 
 #### 请求参数
-files形式
 
 | 参数名称     | 类型     | 是否必须  | 默认值              | 含义                               |
 | ----------- | --------| -------  | ----------------- | -----------------------------------|
-| token       | file    | 是       | 无，通过get_token获得 | 包含在files中                      |
+| init_img    | file    | 是        | 无                 | 图片文件,为单个，以'init_img'为key|
+
+##### 请求示例
+
+**python示例**
+
+~~~python
+import requests
+
+url = 'https://miaohua.sensetime.com/api/v1b/upload_imgs'
+files={'init_img': open('/local/pic1.png','rb')}
+headers = {"Authorization": "Bearer MYREALLYLONGTOKENIGOT"}
+
+response = requests.post(url, files=files, headers=headers)
+
+print(response.status_code)
+print(response.json())
+~~~
+
+##### 返回示例
+
+~~~json
+{
+  "code": 0,
+  "info": [
+    "https://bkmk.oss-accelerate.aliyuncs.com/900ea63e-e1dd-11ed-bef5-00163e005161?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317042257726&Signature=x7nUVN6xpDustx4K02WOTjuty4Q%3D",
+    "https://bkmk.oss-accelerate.aliyuncs.com/91d5e7d4-e1dd-11ed-bef5-00163e005161?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317042257730&Signature=d1weIkwFwVK9nbCrPNdkeVm1wQA%3D"
+  ],
+  "msg": ""
+}
+~~~
+
+### 批量上传图片
+#### 创建访问
+
+**20230809更新：header中添加Authorization 以识别身份, 在未来版本中将会移除file token**
+
+> POST       https://miaohua.sensetime.com/api/v1b/upload_imgs
+> Authorization: Bearer token_string
+
+#### 请求参数
+
+| 参数名称     | 类型     | 是否必须  | 默认值              | 含义                               |
+| ----------- | --------| -------  | ----------------- | -----------------------------------|
 | init_img    | file    | 是        | 无                 | 图片文件,可以多个，都以'init_img'为key|
 
 ##### 请求示例
@@ -453,10 +497,10 @@ url = 'https://miaohua.sensetime.com/api/v1b/upload_imgs'
 # files的列表格式，以init_img为key
 img_paths = ['/local/pic1.png', '/local/pic2.png',]
 files = [('init_img', open(img_path, 'rb')) for img_path in img_paths]
-files.append(('token', token))
+headers = {"Authorization": "Bearer MYREALLYLONGTOKENIGOT"}
 
 
-response = requests.post(url, files=files)
+response = requests.post(url, files=files, headers=headers)
 
 print(response.status_code)
 print(response.json())
