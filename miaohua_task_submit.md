@@ -58,8 +58,8 @@ print(response.text)
 | output_size | string  | 是       | 960x960           | 图片的输出尺寸，如："960x960"                                 |
 | init_img    | string  | 否       | ""                | 输入图片，url形式，若有即为i2i(图生图)，无即为t2i(文生图)。必须是通过/api/v1b/upload_img或 /api/v1b/upload_imgs 上传后的图片地址        |
 | add_prompt | bool     | 否       | false                | 是否使用gpt进行描述词优化, 开启优化生图速度会有一定影响          |
-| cn_configs | array     | 否       | null                | controlnet配置，包括权重、图片，见示例. versionid从 /api/v1b/models/private 或 /api/v1b/models/lora中获取. 权重范围为 0~2 |
-| lora_configs | array     | 否       | null                | lora配置， 包括lora模型、权重， 见示例.支持的cn从 /api/v1b/cn/artist 或 /api/v1b/cn/opensource中获取. 权重范围为 0~2, 图片为通过upload_img/upload_imgs接口上传的图片地址|
+| cn_configs | array     | 否       | null                | controlnet配置，包括权重、图片，见示例. 支持的cn从 /api/v1b/cn/artist 或 /api/v1b/cn/opensource中获取. 权重范围为 0~2, 图片为通过upload_img/upload_imgs接口上传的图片地址|
+| lora_configs | array     | 否       | null                | lora配置， 包括lora模型、权重， 见示例. versionid从 /api/v1b/models/private 或 /api/v1b/models/lora中获取. 权重范围为 0~2 |
 
 > ***注意***：
 > 1. 开源和自研模型的controlnet支持不一样，可以通过 /api/v1b/cn/artist 和 /api/v1b/cn/opensource获取自研和开源模型支持的cn
@@ -658,6 +658,7 @@ print(response.text)
 | ----------- | --------| -------  | ----------------- | ---------------------------------------------------------- |
 | token       | string  | 是       | 无，通过get_token获得 | 通过get_token获取的token                                   |
 | images      | array   | 是       | 无，图片列表 | 通过upload_img和upload_imgs得到的oss 图片链接                         |
+| dataset      | int   | 是       | 无，dataset id| 通过/api/v1b/dataset_all获取                        |
 
 ##### 请求示例
 
@@ -669,6 +670,7 @@ import requests
 url = 'https://miaohua.sensetime.com/api/v1b/dataset/add_images'
 data = {
   "token": "xxx", # get_token获取到的token
+  "dataset": 1,
   "images": [
     "https://bkmk.oss-accelerate.aliyuncs.com/xxxx.JPEG?OSSAccessKeyId=xxx&Signature=xxx"
   ]
@@ -708,6 +710,7 @@ print(response.text)
 | ----------- | --------| -------  | ----------------- | ---------------------------------------------------------- |
 | token       | string  | 是       | 无，通过get_token获得 | 通过get_token获取的token                                   |
 | images      | array   | 是       | 无，图片列表 | 通过upload_img和upload_imgs得到的oss 图片链接                         |
+| dataset      | int   | 是       | 无，dataset id| 通过/api/v1b/dataset_all获取                        |
 
 
 ##### 请求示例
@@ -720,6 +723,7 @@ import requests
 url = 'https://miaohua.sensetime.com/api/v1b/dataset/delete_images'
 data = {
   "token": "xxx", # get_token获取到的token
+  "dataset": 1,
   "images": [
     "https://bkmk.oss-accelerate.aliyuncs.com/xxxx.JPEG?OSSAccessKeyId=xxx&Signature=xxx"
   ]
