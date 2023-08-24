@@ -650,7 +650,7 @@ print(response.text)
 
 ### 数据集中添加图片
 #### 创建访问
-> POST       https://miaohua.sensetime.com/api/v1b/dataset/add-images
+> POST       https://miaohua.sensetime.com/api/v1b/dataset/add_images
 
 #### 请求参数
 
@@ -666,7 +666,7 @@ print(response.text)
 ```python
 import requests
 
-url = 'https://miaohua.sensetime.com/api/v1b/dataset/add-images'
+url = 'https://miaohua.sensetime.com/api/v1b/dataset/add_images'
 data = {
   "token": "xxx", # get_token获取到的token
   "images": [
@@ -701,7 +701,7 @@ print(response.text)
 ### 数据集中删除图片
 
 #### 创建访问
-> POST       https://miaohua.sensetime.com/api/v1b/dataset/delete-images
+> POST       https://miaohua.sensetime.com/api/v1b/dataset/delete_images
 #### 请求参数
 
 | 参数名称     | 类型     | 是否必须  | 默认值              | 含义                                                       |
@@ -717,7 +717,7 @@ print(response.text)
 ```python
 import requests
 
-url = 'https://miaohua.sensetime.com/api/v1b/dataset/delete-images'
+url = 'https://miaohua.sensetime.com/api/v1b/dataset/delete_images'
 data = {
   "token": "xxx", # get_token获取到的token
   "images": [
@@ -885,8 +885,6 @@ print(response.text)
 }
 ~~~
 主要是base_model和main_body这两个字段。
-<<<<<<< HEAD
-=======
 
 
 ### 获取模型：基模型
@@ -1151,4 +1149,3 @@ print(response.text)
     "msg": ""
 }
 ```
->>>>>>> e4e4612 (更新文档)
