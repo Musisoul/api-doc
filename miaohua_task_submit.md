@@ -960,8 +960,13 @@ print(response.text)
 
 请求地址
 
-> POST       https://miaohua.sensetime.com/api/v1b/dataset_all
+> POST       https://miaohua.sensetime.com/api/v1b/dataset_all?page=1
 
+url参数
+
+| 参数名称  | 类型     | 是否必须 | 默认值           | 含义                  |
+|-------| --------|------|---------------|---------------------|
+| page  | string  | 否    |               | 第几页                 |
 
 请求参数
 
