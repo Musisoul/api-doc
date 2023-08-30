@@ -34,12 +34,13 @@ print(response.status_code)
 print(response.text)
 ~~~
 
+
 返回示例
 
 
 ~~~json
 {
-    "info": "xxxxxxxxxxxxxxxxxx", # string 当前用户token
+    "token": "xxxxxxxxxxxxxxxxxx", # string 当前用户token
 }
 ~~~
 
@@ -58,17 +59,23 @@ print(response.text)
 | 参数名称     | 类型     | 是否必须  | 默认值              | 含义                                                      |
 | ----------- | --------| -------  | ----------------- | --------------------------------------------------------- |
 | token       | string  | 是       | 无，通过get_token获得 | 通过get_token获取的token                                  |
-| model_name  | string  | 是       | Artist v0.3.0 Beta  | 模型名称(可选值: 通过/api/v1b/get_generation_form获得)      |
+| model_name  | string  | 是       | Artist v0.3.0 Beta  | 模型名称(可选值: 可通过/api/v1b/models/base获得)      |
 | prompt      | string  | 是       | ""                | 用于生成图片的特征描述，如："one girl,beautiful"               |
 | neg_prompt  | string  | 否       | ""                | 特征的反向描述，一般无需指定                                    |
 | n_images    | int     | 是       | 2                 | 生成图片数量                                                 |
-| scale       | int     | 是       | 7                 | 文本控制力度(1-20)                                           |
+| scale       | int     | 是       | 7                 | 文本控制力度(1-20), 同Prompt weight                         |
+| strength    | float   | 是       | 0.6               | 图片控制力度(0-1), 同Image weight                          |
+| ddim_steps  | int     | 否       | 50                | 迭代步数                                                  |
 | select_seed | int     | 否       | -1                | 随机数种子                                                   |
 | output_size | string  | 是       | 960x960           | 图片的输出尺寸，如："960x960"                                 |
-| init_img    | string  | 否       | ""                | 输入图片，url形式，若有即为i2i(图生图)，无即为t2i(文生图)。当'controlnet_model'参数非空时，init_img为controlnet的输入图片         |
-| controlnet_model    | string  | 否       | ""                | 若为空则不启用controlnet,可选值为"openpose","canny","depth","fake_scribble","scribble","hed","hough","normal","seg" (目前canny已启用)         |
-| add_prompt | bool     | 否       | false                | 是否使用gpt进行描述词优化                                  |
+| init_img    | string  | 否       | ""                | 输入图片，url形式，若有即为i2i(图生图)，无即为t2i(文生图)。必须是通过/api/v1b/upload_img或 /api/v1b/upload_imgs 上传后的图片地址        |
+| add_prompt | bool     | 否       | false                | 是否使用gpt进行描述词优化, 开启优化生图速度会有一定影响          |
+| cn_configs | array     | 否       | null                | controlnet配置，包括权重、图片，见示例. 支持的cn从 /api/v1b/cn/artist 或 /api/v1b/cn/opensource中获取. 权重范围为 0~2, 图片为通过upload_img/upload_imgs接口上传的图片地址|
+| lora_configs | array     | 否       | null                | lora配置， 包括lora模型、权重， 见示例. versionid从 /api/v1b/models/private 或 /api/v1b/models/lora中获取. 权重范围为 0~2 |
 
+> ***注意***：
+> 1. 开源和自研模型的controlnet支持不一样，可以通过 /api/v1b/cn/artist 和 /api/v1b/cn/opensource获取自研和开源模型支持的cn
+> 2. 只有基模型才能作为初始模型，可以通过 /api/v1b/models/base获取基模型， 目前支持一层lora，多层不生效
 
 请求示例
 
@@ -88,7 +95,14 @@ curl https://miaohua.sensetime.com/api/v1b/task_submit \
     "select_seed": -1,
     "token": "",
     "init_img": "",
-    "controlnet_model": "",
+    "ddim_steps": 7,
+    "strength": 0.82,
+    "lora_configs": [
+      {"versionid": "", "merge_weight": 1}
+    ],
+    "cn_configs": {
+      {"cn": "openpose", "img": "https://ossxxxxxx.png", "weight": 1}
+    }
   }'
 ~~~
 
@@ -103,13 +117,20 @@ data = {
     "prompt": "one girl, beautiful", # 正向描述词
     "neg_prompt": "", # 反向描述词
     "n_images": 2, # int 生成图片的数量
+    "ddim_steps": 50, # int 迭代步数
     "scale": 7, # int 文本控制力度
+    "strength": 0.6, # float 图片控制力度
     "output_size": "960x960", # string 生成的图片尺寸
     "select_seed": -1, # int 随机数种子。如果是-1的话代表不指定
     "init_img": "", # img url,若为空为文生图，否则为图生图
-    "controlnet_model": "", # controlnet模型，若为空则不启用controlnet,启用时需要init_img不为空
     "add_prompt": False, # 是否使用gpt进行描述词优化
     "token": "",  # get_token获取的token
+    "lora_configs": [
+      {"versionid": "aaa", "merge_weight": 1}  # versionid从 /api/v1b/models/private 或 /api/v1b/models/lora中获取. 权重范围为 0~2
+    ],
+    "cn_configs": {
+      {"cn": "openpose", "img": "https://ossxxxxxx.png", "weight": 1}  # 支持的cn从 /api/v1b/cn/artist 或 /api/v1b/cn/opensource中获取. 权重范围为 0~2, 图片为通过upload_img/upload_imgs接口上传的图片地址
+    }
 }
 
 response = requests.post(url, json=data)
@@ -117,6 +138,7 @@ response = requests.post(url, json=data)
 print(response.status_code)
 print(response.text)
 ~~~
+
 
 返回示例
 
@@ -175,6 +197,7 @@ response = requests.post(url, json=data)
 print(response.status_code)
 print(response.text)
 ~~~
+
 
 返回示例
 
@@ -271,6 +294,7 @@ print(response.status_code)
 print(response.text)
 ~~~
 
+
 返回示例
 
 
@@ -334,6 +358,7 @@ response = requests.post(url, json=data)
 print(response.json())
 ~~~
 
+
 返回示例
 
 
@@ -371,6 +396,7 @@ response = requests.get(url)
 print(response.status_code)
 print(response.text)
 ~~~
+
 
 返回示例
 
@@ -505,6 +531,7 @@ print(response.status_code)
 print(response.json())
 ~~~
 
+
 返回示例
 
 
@@ -557,6 +584,7 @@ response = requests.post(url, files=files, headers=headers)
 print(response.status_code)
 print(response.json())
 ~~~
+
 
 返回示例
 
@@ -615,6 +643,7 @@ print(response.status_code)
 print(response.text)
 ~~~
 
+
 返回示例
 
 
@@ -656,6 +685,7 @@ print(response.status_code)
 print(response.text)
 ~~~
 
+
 返回示例
 
 
@@ -695,6 +725,127 @@ print(response.text)
   "totalPages": 1
 }
 ~~~
+
+### 数据集中添加图片
+
+请求地址
+
+> POST       https://miaohua.sensetime.com/api/v1b/dataset/add_images
+
+
+请求参数
+
+
+| 参数名称     | 类型     | 是否必须  | 默认值              | 含义                                                       |
+| ----------- | --------| -------  | ----------------- | ---------------------------------------------------------- |
+| token       | string  | 是       | 无，通过get_token获得 | 通过get_token获取的token                                   |
+| images      | array   | 是       | 无，图片列表 | 通过upload_img和upload_imgs得到的oss 图片链接                         |
+| dataset      | int   | 是       | 无，dataset id| 通过/api/v1b/dataset_all获取                        |
+
+
+请求示例
+
+
+**python示例**
+
+```python
+import requests
+
+url = 'https://miaohua.sensetime.com/api/v1b/dataset/add_images'
+data = {
+  "token": "xxx", # get_token获取到的token
+  "dataset": 1,
+  "images": [
+    "https://bkmk.oss-accelerate.aliyuncs.com/xxxx.JPEG?OSSAccessKeyId=xxx&Signature=xxx"
+  ]
+}
+
+response = requests.post(url, json=data)
+
+print(response.status_code)
+print(response.text)
+```
+
+
+返回示例
+
+成功
+```json
+{
+    "code": 0,
+    "info": "",
+    "msg": "OK"
+}
+```
+失败
+```json
+{
+  "code": 400,
+  "info": "",
+  "msg": "invalid image"
+}
+```
+
+### 数据集中删除图片
+
+
+请求地址
+
+> POST       https://miaohua.sensetime.com/api/v1b/dataset/delete_images
+
+请求参数
+
+
+| 参数名称     | 类型     | 是否必须  | 默认值              | 含义                                                       |
+| ----------- | --------| -------  | ----------------- | ---------------------------------------------------------- |
+| token       | string  | 是       | 无，通过get_token获得 | 通过get_token获取的token                                   |
+| images      | array   | 是       | 无，图片列表 | 通过upload_img和upload_imgs得到的oss 图片链接                         |
+| dataset      | int   | 是       | 无，dataset id| 通过/api/v1b/dataset_all获取                        |
+
+
+
+请求示例
+
+
+**python示例**
+
+```python
+import requests
+
+url = 'https://miaohua.sensetime.com/api/v1b/dataset/delete_images'
+data = {
+  "token": "xxx", # get_token获取到的token
+  "dataset": 1,
+  "images": [
+    "https://bkmk.oss-accelerate.aliyuncs.com/xxxx.JPEG?OSSAccessKeyId=xxx&Signature=xxx"
+  ]
+}
+
+response = requests.post(url, json=data)
+
+print(response.status_code)
+print(response.text)
+```
+
+
+返回示例
+
+成功
+```json
+{
+    "code": 0,
+    "info": "",
+    "msg": "OK"
+}
+```
+失败
+```json
+{
+  "code": 400,
+  "info": "",
+  "msg": "invalid image"
+}
+```
 
 ### 提交训练任务
 
@@ -746,6 +897,7 @@ print(response.status_code)
 print(response.text)
 ~~~
 
+
 返回示例
 
 
@@ -791,6 +943,7 @@ print(response.status_code)
 print(response.text)
 ~~~
 
+
 返回示例
 
 
@@ -830,6 +983,7 @@ print(response.status_code)
 print(response.text)
 ~~~
 
+
 返回示例
 
 
@@ -853,3 +1007,307 @@ print(response.text)
 }
 ~~~
 主要是base_model和main_body这两个字段。
+
+
+### 获取模型：基模型
+获取公开的基模型
+
+请求地址
+
+
+> POST       https://miaohua.sensetime.com/api/v1b/models/base
+
+
+请求参数
+
+
+| 参数名称     | 类型     | 是否必须  | 默认值              | 含义                                                      |
+| ----------- | --------| -------  | ----------------- | --------------------------------------------------------- |
+| token       | string  | 是       | 无，通过get_token获得 | 通过get_token获取的token                                  |
+| page        | int     | 否       | 1，第几页 | 第几页                                  |
+| per_page    | int     | 否       | 20，每页数量 | 每页数量                                 |
+| query       | string  | 否       | 无，查询 | 通过模型名、tag等过滤                                  |
+
+
+请求示例
+
+
+**python示例**
+
+```python
+import requests
+
+url = 'https://miaohua.sensetime.com/api/v1b/models/base'
+
+response = requests.post(url, json={"token": "xxx"})
+
+print(response.status_code)
+print(response.text)
+```
+
+
+返回示例
+
+
+```json
+{
+    "code": 0,
+    "info": {
+        "has_next": true,
+        "models": [
+            {
+                "author": "xxx",
+                "base_model": "",
+                "demo_picture": "https://bkmk.oss-accelerate.aliyuncs.com/8b53e958-374e-11ee-9f88-00163e253f9a_00001_XvYNa9vW_raw.jpeg?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317051652108&Signature=4NyJBRoZk86xleogKqp9ud3M60U%3D",
+                "description": "",
+                "is_opensource": true,
+                "model_id": 5,
+                "model_name": "Baby Roy盲盒",
+                "tag": "LORA",
+                "versionid": "xxx"
+            }
+        ],
+        "page": 1,
+        "per_page": 1
+    },
+    "msg": ""
+}
+```
+
+### 获取模型：LoRA模型
+获取公开的LoRA模型, 可跟基模型lora merge
+
+请求地址
+
+
+> POST       https://miaohua.sensetime.com/api/v1b/models/lora
+
+***注意： 目前数据正在补齐中，自定义的lora可以同 api/v1b/models/private中获取***
+
+
+请求参数
+
+
+| 参数名称     | 类型     | 是否必须  | 默认值              | 含义                                                      |
+| ----------- | --------| -------  | ----------------- | --------------------------------------------------------- |
+| token       | string  | 是       | 无，通过get_token获得 | 通过get_token获取的token                                  |
+| page        | int     | 否       | 1，第几页 | 第几页                                  |
+| per_page    | int     | 否       | 20，每页数量 | 每页数量                                 |
+| query       | string  | 否       | 无，查询 | 通过模型名、tag等过滤                                  |
+
+
+请求示例
+
+
+**python示例**
+
+```python
+import requests
+
+url = 'https://miaohua.sensetime.com/api/v1b/models/lora'
+
+response = requests.post(url, json={"token": "xxx"})
+
+print(response.status_code)
+print(response.text)
+```
+
+
+返回示例
+
+
+```json
+{
+    "code": 0,
+    "info": {
+        "has_next": true,
+        "models": [
+            {
+                "author": "xxx",
+                "base_model": "",
+                "demo_picture": "https://bkmk.oss-accelerate.aliyuncs.com/8b53e958-374e-11ee-9f88-00163e253f9a_00001_XvYNa9vW_raw.jpeg?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317051652108&Signature=4NyJBRoZk86xleogKqp9ud3M60U%3D",
+                "description": "",
+                "is_opensource": true,
+                "model_id": 5,
+                "model_name": "Baby Roy盲盒",
+                "tag": "LORA",
+                "versionid": "xxx"
+            }
+        ],
+        "page": 1,
+        "per_page": 1
+    },
+    "msg": ""
+}
+```
+### 获取模型：私有模型(用户上传/训练)
+获取自己上传/训练的LoRA模型, 可跟基模型lora merge
+
+请求地址
+
+
+> POST       https://miaohua.sensetime.com/api/v1b/models/private
+
+
+请求参数
+
+
+| 参数名称     | 类型     | 是否必须  | 默认值              | 含义                                                      |
+| ----------- | --------| -------  | ----------------- | --------------------------------------------------------- |
+| token       | string  | 是       | 无，通过get_token获得 | 通过get_token获取的token                                  |
+| page        | int     | 否       | 1，第几页 | 第几页                                  |
+| per_page    | int     | 否       | 20，每页数量 | 每页数量                                 |
+| query       | string  | 否       | 无，查询 | 通过模型名、tag等过滤                                  |
+
+
+请求示例
+
+
+**python示例**
+
+```python
+import requests
+
+url = 'https://miaohua.sensetime.com/api/v1b/models/private'
+
+response = requests.post(url, json={"token": "xxx"})
+
+print(response.status_code)
+print(response.text)
+```
+
+
+返回示例
+
+
+```json
+{
+    "code": 0,
+    "info": {
+        "has_next": true,
+        "models": [
+            {
+                "author": "xxx",
+                "base_model": "",
+                "demo_picture": "https://bkmk.oss-accelerate.aliyuncs.com/8b53e958-374e-11ee-9f88-00163e253f9a_00001_XvYNa9vW_raw.jpeg?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317051652108&Signature=4NyJBRoZk86xleogKqp9ud3M60U%3D",
+                "description": "",
+                "is_opensource": true,
+                "model_id": 5,
+                "model_name": "Baby Roy盲盒",
+                "tag": "LORA",
+                "versionid": "xxx"
+            }
+        ],
+        "page": 1,
+        "per_page": 1
+    },
+    "msg": ""
+}
+```
+
+### 获取Controlnet列表: Artist
+获取自研模型支持的controlnet列表， 可用于推理生图控制
+
+请求地址
+
+
+> POST       https://miaohua.sensetime.com/api/v1b/cn/artist
+
+
+请求参数
+
+
+| 参数名称     | 类型     | 是否必须  | 默认值              | 含义                                                      |
+| ----------- | --------| -------  | ----------------- | --------------------------------------------------------- |
+| token       | string  | 是       | 无，通过get_token获得 | 通过get_token获取的token                                  |
+
+
+请求示例
+
+
+**python示例**
+
+```python
+import requests
+
+url = 'https://miaohua.sensetime.com/api/v1b/cn/artist'
+
+response = requests.post(url, json={"token": "xxx"})
+
+print(response.status_code)
+print(response.text)
+```
+
+
+返回示例
+
+
+```json
+{
+    "code": 0,
+    "info": [
+        {
+            "demo_picture": "https://bkmk.oss-accelerate.aliyuncs.com/75ccd522-3fd7-11ee-b072-00163e253f9a.png?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317052590512&Signature=UFmUGW1nalt2Ni2HlTkikgV%2Byk4%3D",
+            "demo_preview": "https://bkmk.oss-accelerate.aliyuncs.com/b9a6b330-3fd7-11ee-b072-00163e253f9a.png?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317052590627&Signature=XCcGGQCm%2BmxcDS2pajjBHABjgWo%3D",
+            "demo_result": "https://bkmk.oss-accelerate.aliyuncs.com/0e88ca3c-3fd8-11ee-abdf-00163e253f9a.png?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317052590768&Signature=rvY7Y%2Bd9fgRg5aUvo4WtZC4IJyw%3D",
+            "desc": "Onepose: Extracting Character Pose/Pose Recognition can use the figure uploaded by the user as a reference picture for AI painting, extract the pose and movement of the character, and generate a picture of the same pose, with accurate and stunning results.",
+            "local_name": "Pose",
+            "name": "openpose"
+        }
+    ],
+    "msg": ""
+}
+```
+### 获取Controlnet列表: 开源
+获取开源模型支持的controlnet列表， 可用于推理生图控制
+
+请求地址
+
+
+> POST       https://miaohua.sensetime.com/api/v1b/cn/opensource
+
+
+请求参数
+
+
+| 参数名称     | 类型     | 是否必须  | 默认值              | 含义                                                      |
+| ----------- | --------| -------  | ----------------- | --------------------------------------------------------- |
+| token       | string  | 是       | 无，通过get_token获得 | 通过get_token获取的token                                  |
+
+
+请求示例
+
+
+**python示例**
+
+```python
+import requests
+
+url = 'https://miaohua.sensetime.com/api/v1b/cn/opensource'
+
+response = requests.post(url, json={"token": "xxx"})
+
+print(response.status_code)
+print(response.text)
+```
+
+
+返回示例
+
+
+```json
+{
+    "code": 0,
+    "info": [
+        {
+            "demo_picture": "https://bkmk.oss-accelerate.aliyuncs.com/75ccd522-3fd7-11ee-b072-00163e253f9a.png?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317052590512&Signature=UFmUGW1nalt2Ni2HlTkikgV%2Byk4%3D",
+            "demo_preview": "https://bkmk.oss-accelerate.aliyuncs.com/b9a6b330-3fd7-11ee-b072-00163e253f9a.png?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317052590627&Signature=XCcGGQCm%2BmxcDS2pajjBHABjgWo%3D",
+            "demo_result": "https://bkmk.oss-accelerate.aliyuncs.com/0e88ca3c-3fd8-11ee-abdf-00163e253f9a.png?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317052590768&Signature=rvY7Y%2Bd9fgRg5aUvo4WtZC4IJyw%3D",
+            "desc": "Onepose: Extracting Character Pose/Pose Recognition can use the figure uploaded by the user as a reference picture for AI painting, extract the pose and movement of the character, and generate a picture of the same pose, with accurate and stunning results.",
+            "local_name": "Pose",
+            "name": "openpose"
+        }
+    ],
+    "msg": ""
+}
+```
