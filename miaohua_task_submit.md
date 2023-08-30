@@ -494,6 +494,311 @@ print(response.text)
 
 ~~~
 
+
+### 获取模型：基模型
+获取公开的基模型
+
+请求地址
+
+
+> POST       https://miaohua.sensetime.com/api/v1b/models/base
+
+
+请求参数
+
+
+| 参数名称     | 类型     | 是否必须  | 默认值              | 含义                                                      |
+| ----------- | --------| -------  | ----------------- | --------------------------------------------------------- |
+| token       | string  | 是       | 无，通过get_token获得 | 通过get_token获取的token                                  |
+| page        | int     | 否       | 1，第几页 | 第几页                                  |
+| per_page    | int     | 否       | 20，每页数量 | 每页数量                                 |
+| query       | string  | 否       | 无，查询 | 通过模型名、tag等过滤                                  |
+
+
+请求示例
+
+
+**python示例**
+
+```python
+import requests
+
+url = 'https://miaohua.sensetime.com/api/v1b/models/base'
+
+response = requests.post(url, json={"token": "xxx"})
+
+print(response.status_code)
+print(response.text)
+```
+
+
+返回示例
+
+
+```json
+{
+    "code": 0,
+    "info": {
+        "has_next": true,
+        "models": [
+            {
+                "author": "xxx",
+                "base_model": "",
+                "demo_picture": "https://bkmk.oss-accelerate.aliyuncs.com/8b53e958-374e-11ee-9f88-00163e253f9a_00001_XvYNa9vW_raw.jpeg?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317051652108&Signature=4NyJBRoZk86xleogKqp9ud3M60U%3D",
+                "description": "",
+                "is_opensource": true,
+                "model_id": 5,
+                "model_name": "Baby Roy盲盒",
+                "tag": "LORA",
+                "versionid": "xxx"
+            }
+        ],
+        "page": 1,
+        "per_page": 1
+    },
+    "msg": ""
+}
+```
+
+### 获取模型：LoRA模型
+获取公开的LoRA模型, 可跟基模型lora merge
+
+请求地址
+
+
+> POST       https://miaohua.sensetime.com/api/v1b/models/lora
+
+***注意： 目前数据正在补齐中，自定义的lora可以同 api/v1b/models/private中获取***
+
+
+请求参数
+
+
+| 参数名称     | 类型     | 是否必须  | 默认值              | 含义                                                      |
+| ----------- | --------| -------  | ----------------- | --------------------------------------------------------- |
+| token       | string  | 是       | 无，通过get_token获得 | 通过get_token获取的token                                  |
+| page        | int     | 否       | 1，第几页 | 第几页                                  |
+| per_page    | int     | 否       | 20，每页数量 | 每页数量                                 |
+| query       | string  | 否       | 无，查询 | 通过模型名、tag等过滤                                  |
+
+
+请求示例
+
+
+**python示例**
+
+```python
+import requests
+
+url = 'https://miaohua.sensetime.com/api/v1b/models/lora'
+
+response = requests.post(url, json={"token": "xxx"})
+
+print(response.status_code)
+print(response.text)
+```
+
+
+返回示例
+
+
+```json
+{
+    "code": 0,
+    "info": {
+        "has_next": true,
+        "models": [
+            {
+                "author": "xxx",
+                "base_model": "",
+                "demo_picture": "https://bkmk.oss-accelerate.aliyuncs.com/8b53e958-374e-11ee-9f88-00163e253f9a_00001_XvYNa9vW_raw.jpeg?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317051652108&Signature=4NyJBRoZk86xleogKqp9ud3M60U%3D",
+                "description": "",
+                "is_opensource": true,
+                "model_id": 5,
+                "model_name": "Baby Roy盲盒",
+                "tag": "LORA",
+                "versionid": "xxx"
+            }
+        ],
+        "page": 1,
+        "per_page": 1
+    },
+    "msg": ""
+}
+```
+### 获取模型：私有模型(用户上传/训练)
+获取自己上传/训练的LoRA模型, 可跟基模型lora merge
+
+请求地址
+
+
+> POST       https://miaohua.sensetime.com/api/v1b/models/private
+
+
+请求参数
+
+
+| 参数名称     | 类型     | 是否必须  | 默认值              | 含义                                                      |
+| ----------- | --------| -------  | ----------------- | --------------------------------------------------------- |
+| token       | string  | 是       | 无，通过get_token获得 | 通过get_token获取的token                                  |
+| page        | int     | 否       | 1，第几页 | 第几页                                  |
+| per_page    | int     | 否       | 20，每页数量 | 每页数量                                 |
+| query       | string  | 否       | 无，查询 | 通过模型名、tag等过滤                                  |
+
+
+请求示例
+
+
+**python示例**
+
+```python
+import requests
+
+url = 'https://miaohua.sensetime.com/api/v1b/models/private'
+
+response = requests.post(url, json={"token": "xxx"})
+
+print(response.status_code)
+print(response.text)
+```
+
+
+返回示例
+
+
+```json
+{
+    "code": 0,
+    "info": {
+        "has_next": true,
+        "models": [
+            {
+                "author": "xxx",
+                "base_model": "",
+                "demo_picture": "https://bkmk.oss-accelerate.aliyuncs.com/8b53e958-374e-11ee-9f88-00163e253f9a_00001_XvYNa9vW_raw.jpeg?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317051652108&Signature=4NyJBRoZk86xleogKqp9ud3M60U%3D",
+                "description": "",
+                "is_opensource": true,
+                "model_id": 5,
+                "model_name": "Baby Roy盲盒",
+                "tag": "LORA",
+                "versionid": "xxx"
+            }
+        ],
+        "page": 1,
+        "per_page": 1
+    },
+    "msg": ""
+}
+```
+
+### 获取Controlnet列表: Artist
+获取自研模型支持的controlnet列表， 可用于推理生图控制
+
+请求地址
+
+
+> POST       https://miaohua.sensetime.com/api/v1b/cn/artist
+
+
+请求参数
+
+
+| 参数名称     | 类型     | 是否必须  | 默认值              | 含义                                                      |
+| ----------- | --------| -------  | ----------------- | --------------------------------------------------------- |
+| token       | string  | 是       | 无，通过get_token获得 | 通过get_token获取的token                                  |
+
+
+请求示例
+
+
+**python示例**
+
+```python
+import requests
+
+url = 'https://miaohua.sensetime.com/api/v1b/cn/artist'
+
+response = requests.post(url, json={"token": "xxx"})
+
+print(response.status_code)
+print(response.text)
+```
+
+
+返回示例
+
+
+```json
+{
+    "code": 0,
+    "info": [
+        {
+            "demo_picture": "https://bkmk.oss-accelerate.aliyuncs.com/75ccd522-3fd7-11ee-b072-00163e253f9a.png?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317052590512&Signature=UFmUGW1nalt2Ni2HlTkikgV%2Byk4%3D",
+            "demo_preview": "https://bkmk.oss-accelerate.aliyuncs.com/b9a6b330-3fd7-11ee-b072-00163e253f9a.png?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317052590627&Signature=XCcGGQCm%2BmxcDS2pajjBHABjgWo%3D",
+            "demo_result": "https://bkmk.oss-accelerate.aliyuncs.com/0e88ca3c-3fd8-11ee-abdf-00163e253f9a.png?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317052590768&Signature=rvY7Y%2Bd9fgRg5aUvo4WtZC4IJyw%3D",
+            "desc": "Onepose: Extracting Character Pose/Pose Recognition can use the figure uploaded by the user as a reference picture for AI painting, extract the pose and movement of the character, and generate a picture of the same pose, with accurate and stunning results.",
+            "local_name": "Pose",
+            "name": "openpose"
+        }
+    ],
+    "msg": ""
+}
+```
+### 获取Controlnet列表: 开源
+获取开源模型支持的controlnet列表， 可用于推理生图控制
+
+请求地址
+
+
+> POST       https://miaohua.sensetime.com/api/v1b/cn/opensource
+
+
+请求参数
+
+
+| 参数名称     | 类型     | 是否必须  | 默认值              | 含义                                                      |
+| ----------- | --------| -------  | ----------------- | --------------------------------------------------------- |
+| token       | string  | 是       | 无，通过get_token获得 | 通过get_token获取的token                                  |
+
+
+请求示例
+
+
+**python示例**
+
+```python
+import requests
+
+url = 'https://miaohua.sensetime.com/api/v1b/cn/opensource'
+
+response = requests.post(url, json={"token": "xxx"})
+
+print(response.status_code)
+print(response.text)
+```
+
+
+返回示例
+
+
+```json
+{
+    "code": 0,
+    "info": [
+        {
+            "demo_picture": "https://bkmk.oss-accelerate.aliyuncs.com/75ccd522-3fd7-11ee-b072-00163e253f9a.png?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317052590512&Signature=UFmUGW1nalt2Ni2HlTkikgV%2Byk4%3D",
+            "demo_preview": "https://bkmk.oss-accelerate.aliyuncs.com/b9a6b330-3fd7-11ee-b072-00163e253f9a.png?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317052590627&Signature=XCcGGQCm%2BmxcDS2pajjBHABjgWo%3D",
+            "demo_result": "https://bkmk.oss-accelerate.aliyuncs.com/0e88ca3c-3fd8-11ee-abdf-00163e253f9a.png?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317052590768&Signature=rvY7Y%2Bd9fgRg5aUvo4WtZC4IJyw%3D",
+            "desc": "Onepose: Extracting Character Pose/Pose Recognition can use the figure uploaded by the user as a reference picture for AI painting, extract the pose and movement of the character, and generate a picture of the same pose, with accurate and stunning results.",
+            "local_name": "Pose",
+            "name": "openpose"
+        }
+    ],
+    "msg": ""
+}
+```
+
+
 ## 以下为训练相关
 
 ### 上传图片
@@ -661,9 +966,10 @@ print(response.text)
 请求参数
 
 
-| 参数名称     | 类型     | 是否必须  | 默认值              | 含义                                                       |
-| ----------- | --------| -------  | ----------------- | ---------------------------------------------------------- |
-| token       | string  | 是       | 无，通过get_token获得 | 通过get_token获取的token                                   |
+| 参数名称  | 类型     | 是否必须 | 默认值           | 含义                  |
+|-------| --------|------|---------------|---------------------|
+| token | string  | 是    | 无，通过get_token获得 | 通过get_token获取的token |
+| page  | string  | 否    |               | 第几页                 |
 
 
 请求示例
@@ -1008,306 +1314,3 @@ print(response.text)
 ~~~
 主要是base_model和main_body这两个字段。
 
-
-### 获取模型：基模型
-获取公开的基模型
-
-请求地址
-
-
-> POST       https://miaohua.sensetime.com/api/v1b/models/base
-
-
-请求参数
-
-
-| 参数名称     | 类型     | 是否必须  | 默认值              | 含义                                                      |
-| ----------- | --------| -------  | ----------------- | --------------------------------------------------------- |
-| token       | string  | 是       | 无，通过get_token获得 | 通过get_token获取的token                                  |
-| page        | int     | 否       | 1，第几页 | 第几页                                  |
-| per_page    | int     | 否       | 20，每页数量 | 每页数量                                 |
-| query       | string  | 否       | 无，查询 | 通过模型名、tag等过滤                                  |
-
-
-请求示例
-
-
-**python示例**
-
-```python
-import requests
-
-url = 'https://miaohua.sensetime.com/api/v1b/models/base'
-
-response = requests.post(url, json={"token": "xxx"})
-
-print(response.status_code)
-print(response.text)
-```
-
-
-返回示例
-
-
-```json
-{
-    "code": 0,
-    "info": {
-        "has_next": true,
-        "models": [
-            {
-                "author": "xxx",
-                "base_model": "",
-                "demo_picture": "https://bkmk.oss-accelerate.aliyuncs.com/8b53e958-374e-11ee-9f88-00163e253f9a_00001_XvYNa9vW_raw.jpeg?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317051652108&Signature=4NyJBRoZk86xleogKqp9ud3M60U%3D",
-                "description": "",
-                "is_opensource": true,
-                "model_id": 5,
-                "model_name": "Baby Roy盲盒",
-                "tag": "LORA",
-                "versionid": "xxx"
-            }
-        ],
-        "page": 1,
-        "per_page": 1
-    },
-    "msg": ""
-}
-```
-
-### 获取模型：LoRA模型
-获取公开的LoRA模型, 可跟基模型lora merge
-
-请求地址
-
-
-> POST       https://miaohua.sensetime.com/api/v1b/models/lora
-
-***注意： 目前数据正在补齐中，自定义的lora可以同 api/v1b/models/private中获取***
-
-
-请求参数
-
-
-| 参数名称     | 类型     | 是否必须  | 默认值              | 含义                                                      |
-| ----------- | --------| -------  | ----------------- | --------------------------------------------------------- |
-| token       | string  | 是       | 无，通过get_token获得 | 通过get_token获取的token                                  |
-| page        | int     | 否       | 1，第几页 | 第几页                                  |
-| per_page    | int     | 否       | 20，每页数量 | 每页数量                                 |
-| query       | string  | 否       | 无，查询 | 通过模型名、tag等过滤                                  |
-
-
-请求示例
-
-
-**python示例**
-
-```python
-import requests
-
-url = 'https://miaohua.sensetime.com/api/v1b/models/lora'
-
-response = requests.post(url, json={"token": "xxx"})
-
-print(response.status_code)
-print(response.text)
-```
-
-
-返回示例
-
-
-```json
-{
-    "code": 0,
-    "info": {
-        "has_next": true,
-        "models": [
-            {
-                "author": "xxx",
-                "base_model": "",
-                "demo_picture": "https://bkmk.oss-accelerate.aliyuncs.com/8b53e958-374e-11ee-9f88-00163e253f9a_00001_XvYNa9vW_raw.jpeg?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317051652108&Signature=4NyJBRoZk86xleogKqp9ud3M60U%3D",
-                "description": "",
-                "is_opensource": true,
-                "model_id": 5,
-                "model_name": "Baby Roy盲盒",
-                "tag": "LORA",
-                "versionid": "xxx"
-            }
-        ],
-        "page": 1,
-        "per_page": 1
-    },
-    "msg": ""
-}
-```
-### 获取模型：私有模型(用户上传/训练)
-获取自己上传/训练的LoRA模型, 可跟基模型lora merge
-
-请求地址
-
-
-> POST       https://miaohua.sensetime.com/api/v1b/models/private
-
-
-请求参数
-
-
-| 参数名称     | 类型     | 是否必须  | 默认值              | 含义                                                      |
-| ----------- | --------| -------  | ----------------- | --------------------------------------------------------- |
-| token       | string  | 是       | 无，通过get_token获得 | 通过get_token获取的token                                  |
-| page        | int     | 否       | 1，第几页 | 第几页                                  |
-| per_page    | int     | 否       | 20，每页数量 | 每页数量                                 |
-| query       | string  | 否       | 无，查询 | 通过模型名、tag等过滤                                  |
-
-
-请求示例
-
-
-**python示例**
-
-```python
-import requests
-
-url = 'https://miaohua.sensetime.com/api/v1b/models/private'
-
-response = requests.post(url, json={"token": "xxx"})
-
-print(response.status_code)
-print(response.text)
-```
-
-
-返回示例
-
-
-```json
-{
-    "code": 0,
-    "info": {
-        "has_next": true,
-        "models": [
-            {
-                "author": "xxx",
-                "base_model": "",
-                "demo_picture": "https://bkmk.oss-accelerate.aliyuncs.com/8b53e958-374e-11ee-9f88-00163e253f9a_00001_XvYNa9vW_raw.jpeg?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317051652108&Signature=4NyJBRoZk86xleogKqp9ud3M60U%3D",
-                "description": "",
-                "is_opensource": true,
-                "model_id": 5,
-                "model_name": "Baby Roy盲盒",
-                "tag": "LORA",
-                "versionid": "xxx"
-            }
-        ],
-        "page": 1,
-        "per_page": 1
-    },
-    "msg": ""
-}
-```
-
-### 获取Controlnet列表: Artist
-获取自研模型支持的controlnet列表， 可用于推理生图控制
-
-请求地址
-
-
-> POST       https://miaohua.sensetime.com/api/v1b/cn/artist
-
-
-请求参数
-
-
-| 参数名称     | 类型     | 是否必须  | 默认值              | 含义                                                      |
-| ----------- | --------| -------  | ----------------- | --------------------------------------------------------- |
-| token       | string  | 是       | 无，通过get_token获得 | 通过get_token获取的token                                  |
-
-
-请求示例
-
-
-**python示例**
-
-```python
-import requests
-
-url = 'https://miaohua.sensetime.com/api/v1b/cn/artist'
-
-response = requests.post(url, json={"token": "xxx"})
-
-print(response.status_code)
-print(response.text)
-```
-
-
-返回示例
-
-
-```json
-{
-    "code": 0,
-    "info": [
-        {
-            "demo_picture": "https://bkmk.oss-accelerate.aliyuncs.com/75ccd522-3fd7-11ee-b072-00163e253f9a.png?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317052590512&Signature=UFmUGW1nalt2Ni2HlTkikgV%2Byk4%3D",
-            "demo_preview": "https://bkmk.oss-accelerate.aliyuncs.com/b9a6b330-3fd7-11ee-b072-00163e253f9a.png?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317052590627&Signature=XCcGGQCm%2BmxcDS2pajjBHABjgWo%3D",
-            "demo_result": "https://bkmk.oss-accelerate.aliyuncs.com/0e88ca3c-3fd8-11ee-abdf-00163e253f9a.png?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317052590768&Signature=rvY7Y%2Bd9fgRg5aUvo4WtZC4IJyw%3D",
-            "desc": "Onepose: Extracting Character Pose/Pose Recognition can use the figure uploaded by the user as a reference picture for AI painting, extract the pose and movement of the character, and generate a picture of the same pose, with accurate and stunning results.",
-            "local_name": "Pose",
-            "name": "openpose"
-        }
-    ],
-    "msg": ""
-}
-```
-### 获取Controlnet列表: 开源
-获取开源模型支持的controlnet列表， 可用于推理生图控制
-
-请求地址
-
-
-> POST       https://miaohua.sensetime.com/api/v1b/cn/opensource
-
-
-请求参数
-
-
-| 参数名称     | 类型     | 是否必须  | 默认值              | 含义                                                      |
-| ----------- | --------| -------  | ----------------- | --------------------------------------------------------- |
-| token       | string  | 是       | 无，通过get_token获得 | 通过get_token获取的token                                  |
-
-
-请求示例
-
-
-**python示例**
-
-```python
-import requests
-
-url = 'https://miaohua.sensetime.com/api/v1b/cn/opensource'
-
-response = requests.post(url, json={"token": "xxx"})
-
-print(response.status_code)
-print(response.text)
-```
-
-
-返回示例
-
-
-```json
-{
-    "code": 0,
-    "info": [
-        {
-            "demo_picture": "https://bkmk.oss-accelerate.aliyuncs.com/75ccd522-3fd7-11ee-b072-00163e253f9a.png?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317052590512&Signature=UFmUGW1nalt2Ni2HlTkikgV%2Byk4%3D",
-            "demo_preview": "https://bkmk.oss-accelerate.aliyuncs.com/b9a6b330-3fd7-11ee-b072-00163e253f9a.png?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317052590627&Signature=XCcGGQCm%2BmxcDS2pajjBHABjgWo%3D",
-            "demo_result": "https://bkmk.oss-accelerate.aliyuncs.com/0e88ca3c-3fd8-11ee-abdf-00163e253f9a.png?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317052590768&Signature=rvY7Y%2Bd9fgRg5aUvo4WtZC4IJyw%3D",
-            "desc": "Onepose: Extracting Character Pose/Pose Recognition can use the figure uploaded by the user as a reference picture for AI painting, extract the pose and movement of the character, and generate a picture of the same pose, with accurate and stunning results.",
-            "local_name": "Pose",
-            "name": "openpose"
-        }
-    ],
-    "msg": ""
-}
-```
