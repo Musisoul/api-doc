@@ -920,7 +920,7 @@ print(response.json())
 | token       | string  | 是       | 无，通过get_token获得 | 通过get_token获取的token                                   |
 | name        | string  | 是       | 无                  | 数据集名称                                                  |
 | description | string  | 否       | ""                |  数据集描述                                                   |
-| images      | list    | 是       | 无                 | 图片列表, url list，可通过批量上传图片接口/api/v1b/upload_imgs获取|
+| images      | list    | 是       | 无                 | 图片列表, url list，可通过批量上传图片接口/api/v1b/upload_imgs获取,支持客户自有阿里云oss的url|
 
 
 请求示例
