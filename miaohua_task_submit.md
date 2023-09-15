@@ -70,7 +70,7 @@ print(response.text)
 | output_size | string  | 是       | 960x960           | 图片的输出尺寸，如："960x960"                                 |
 | init_img    | string  | 否       | ""                | 输入图片，url形式，若有即为i2i(图生图)，无即为t2i(文生图)。必须是通过/api/v1b/upload_img或 /api/v1b/upload_imgs 上传后的图片地址        |
 | add_prompt | bool     | 否       | false                | 是否使用gpt进行描述词优化, 开启优化生图速度会有一定影响          |
-| cn_configs | array     | 否       | null                | controlnet配置，包括权重、图片，见示例. 支持的cn从 /api/v1b/cn/artist 或 /api/v1b/cn/opensource中获取. 权重范围为 0~2, 图片为通过upload_img/upload_imgs接口上传的图片地址|
+| cn_configs | array     | 否       | null                | controlnet配置，包括权重、图片，见示例. 支持的cn从 /api/v1b/cn/artist 或 /api/v1b/cn/opensource中获取. 权重范围为 0~2, 图片为通过upload_img/upload_imgs接口上传的图片地址，最多支持传入3个cn|
 | lora_configs | array     | 否       | null                | lora配置， 包括lora模型、权重， 见示例. versionid从 /api/v1b/models/private 或 /api/v1b/models/lora中获取. 权重范围为 0~2 |
 
 > ***注意***：
@@ -128,15 +128,93 @@ data = {
     "lora_configs": [
       {"versionid": "aaa", "merge_weight": 1}  # versionid从 /api/v1b/models/private 或 /api/v1b/models/lora中获取. 权重范围为 0~2
     ],
-    "cn_configs": {
+    "cn_configs": [
       {"cn": "openpose", "img": "https://ossxxxxxx.png", "weight": 1}  # 支持的cn从 /api/v1b/cn/artist 或 /api/v1b/cn/opensource中获取. 权重范围为 0~2, 图片为通过upload_img/upload_imgs接口上传的图片地址
-    }
+    ]
 }
 
 response = requests.post(url, json=data)
 
 print(response.status_code)
 print(response.text)
+~~~
+
+**多cn 示例**
+~~~ JSON
+{
+    "token": "",
+    "lora_configs": [],
+    "model_name": "Anything V3_fp16_train",
+    "prompt": "t1#girl, room, red hair, red clothes",
+    "neg_prompt": "",
+    "n_images": 2,
+    "scale": 7,
+    "select_seed": -1,
+    "init_img": "https://bkmk.oss-accelerate.aliyuncs.com/2c0001d0-4004-11ee-b30c-00163e005161.jpg?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317052609716&Signature=ZalLV8FSCsTU3DjPtKCqOn2qXr0%3D",
+    "add_prompt": false,
+    "ddim_steps": 50,
+    "output_size": "2748x4096",
+    "cn_configs": [{
+        "cn": "tile",
+        "weight": 0.3,
+        "guidance_start": 0.1, //  0-1 默认0
+        "guidance_end": 0.9, //  0-1 默认1
+        "img": "https://bkmk.oss-accelerate.aliyuncs.com/35c82400-52c8-11ee-817a-1e719ed4d673.png?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317054673034&Signature=X1A%2Bhnro0l0TmLOWKknlBckJhok%3D",
+        "config": {
+            "control_processor": "tile_resample",
+            "down_sample_rate": 1 // , tile需要 浮点数两位小数,默认1,范围1-8
+        }
+    }, {
+        "cn": "brightness",
+        "weight": 0.4,
+        "guidance_start": 0.2, //  0-1 默认0
+        "guidance_end": 0.8, //  0-1 默认1
+        "img": "https://bkmk.oss-accelerate.aliyuncs.com/35c82400-52c8-11ee-817a-1e719ed4d673.png?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317054673034&Signature=X1A%2Bhnro0l0TmLOWKknlBckJhok%3D",
+        "config": {
+            "control_processor": "None"
+        }
+    }]
+}
+{
+    "token": "",
+    "lora_configs": [],
+    "model_name": "Dalcefo",
+    "prompt": "t1#girl, room, red hair, red clothes",
+    "neg_prompt": "",
+    "n_images": 2,
+    "scale": 7,
+    "select_seed": -1,
+    "init_img": "https://bkmk.oss-accelerate.aliyuncs.com/8804c8b2-52c9-11ee-aa0d-ea71f9947415.png?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317054673602&Signature=hguT%2BR3VxxSvZLxBg%2FMi6vanyA8%3D",
+    "add_prompt": false,
+    "ddim_steps": 50,
+    // "output_size": "2748x4096",
+    "output_size": "2256x2252",
+    "cn_configs": [{
+        "cn": "canny",
+        "weight": 0.9,
+        "guidance_start": 0, //  0-1 默认0
+        "guidance_end": 1, //  0-1 默认1
+        "img": "https://bkmk.oss-accelerate.aliyuncs.com/aaa2d68e-52c4-11ee-817a-1e719ed4d673.png?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317054671512&Signature=hUkZUXxJ1eHCwgQ4m0UiWz%2BaC6o%3D",
+        "config": {
+            "control_processor": "canny",
+            "preprocessor_resolution": "512", // 64-2048 默认512
+            "pixel_perfect": false, //  默认false
+            "control_mode": "balanced", //  不用配置，默认 balanced   "balanced" or "control_is_more_important"
+            // "Resize Mode": "Crop and Resize", // 不用配置，默认Crop and Resize
+            "low_threshold": 100, // , canny需要 范围1-255，默认100
+            "high_threshold": 200 // , canny需要 范围1-255，默认200
+        }
+    }, {
+        "cn": "depth",
+        "weight": 0.9,
+        "guidance_start": 0, //  0-1 默认0
+        "guidance_end": 1, //  0-1 默认1
+        "img": "https://bkmk.oss-accelerate.aliyuncs.com/c6996632-52c4-11ee-817a-1e719ed4d673.png?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317054671559&Signature=6QUz0hfQT7RmxM0EMzQKitE%2FMnY%3D",
+        "config": {
+            "control_processor": "depth_midas"
+        }
+    }]
+}
 ~~~
 
 
