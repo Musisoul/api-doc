@@ -1,25 +1,26 @@
 ## 图片生成(i2i,t2i) 接口
 
-
 ### 获取token
 
 请求地址
 
-> POST   https://miaohua.sensetime.com/api/v1b/get_token
+> POST   [https://miaohua.sensetime.com/api/v1b/get_token](https://miaohua.sensetime.com/api/v1b/get_token)
+
 
 请求参数
 
-| 参数名称     | 类型     | 是否必须  | 默认值              | 含义                                                     |
-| ----------- | --------| -------  | -------------------| --------------------------------------------------------|
-| email       | string  | 是       | "xxx@example.com"  | tob用户的用户邮箱，需先在miaohua.sensetime.com注册           |
-| password    | string  | 是       |  "password"        | tob用户密码                                               |
+| 参数名称 | 类型 | 是否必须 | 默认值 | 含义 |
+| --- | --- | --- | --- | --- |
+| email | string | 是 | "[xxx@example.com](mailto:xxx@example.com)
+" | tob用户的用户邮箱，需先在miaohua.sensetime.com注册 |
+| password | string | 是 | "password" | tob用户密码 |
 
 
 请求示例
 
 **python示例**
 
-~~~python
+```python
 import requests
 
 url = 'https://miaohua.sensetime.com/api/v1b/get_token'
@@ -32,57 +33,54 @@ response = requests.post(url, json=data)
 
 print(response.status_code)
 print(response.text)
-~~~
-
+```
 
 返回示例
 
-
-~~~json
+```json
 {
     "token": "xxxxxxxxxxxxxxxxxx", # string 当前用户token
 }
-~~~
+```
 
 ### 任务提交
 
-
 请求地址
 
-
-> POST   https://miaohua.sensetime.com/api/v1b/task_submit
+> POST   [https://miaohua.sensetime.com/api/v1b/task_submit](https://miaohua.sensetime.com/api/v1b/task_submit)
 
 
 请求参数
 
+| 参数名称 | 类型 | 是否必须 | 默认值 | 含义 |
+| --- | --- | --- | --- | --- |
+| token | string | 是 | 无，通过get_token获得 | 通过get_token获取的token |
+| model_name | string | 是 | Artist v0.3.0 Beta | 模型名称(可选值: 可通过/api/v1b/models/base获得) |
+| prompt | string | 是 | "" | 用于生成图片的特征描述，如："one girl,beautiful" |
+| neg_prompt | string | 否 | "" | 特征的反向描述，一般无需指定 |
+| n_images | int | 是 | 2 | 生成图片数量 |
+| scale | int | 是 | 7 | 文本控制力度(1-20), 同Prompt weight |
+| strength | float | 是 | 0.6 | 图片控制力度(0-1), 同Image weight |
+| ddim_steps | int | 否 | 50 | 迭代步数 |
+| select_seed | int | 否 | -1 | 随机数种子 |
+| output_size | string | 是 | 960x960 | 图片的输出尺寸，如："960x960" |
+| init_img | string | 否 | "" | 输入图片，url形式，若有即为i2i(图生图)，无即为t2i(文生图)。必须是通过/api/v1b/upload_img或 /api/v1b/upload_imgs 上传后的图片地址 |
+| add_prompt | bool | 否 | false | 是否使用gpt进行描述词优化, 开启优化生图速度会有一定影响 |
+| cn_configs | array | 否 | null | controlnet配置，包括权重、图片，见示例. 支持的cn从 /api/v1b/cn/artist 或 /api/v1b/cn/opensource中获取. 权重范围为 0~2, 图片为通过upload_img/upload_imgs接口上传的图片地址，最多支持传入3个cn |
+| lora_configs | array | 否 | null | lora配置， 包括lora模型、权重， 见示例. versionid从 /api/v1b/models/private 或 /api/v1b/models/lora中获取. 权重范围为 0~2 |
 
-| 参数名称     | 类型     | 是否必须  | 默认值              | 含义                                                      |
-| ----------- | --------| -------  | ----------------- | --------------------------------------------------------- |
-| token       | string  | 是       | 无，通过get_token获得 | 通过get_token获取的token                                  |
-| model_name  | string  | 是       | Artist v0.3.0 Beta  | 模型名称(可选值: 可通过/api/v1b/models/base获得)      |
-| prompt      | string  | 是       | ""                | 用于生成图片的特征描述，如："one girl,beautiful"               |
-| neg_prompt  | string  | 否       | ""                | 特征的反向描述，一般无需指定                                    |
-| n_images    | int     | 是       | 2                 | 生成图片数量                                                 |
-| scale       | int     | 是       | 7                 | 文本控制力度(1-20), 同Prompt weight                         |
-| strength    | float   | 是       | 0.6               | 图片控制力度(0-1), 同Image weight                          |
-| ddim_steps  | int     | 否       | 50                | 迭代步数                                                  |
-| select_seed | int     | 否       | -1                | 随机数种子                                                   |
-| output_size | string  | 是       | 960x960           | 图片的输出尺寸，如："960x960"                                 |
-| init_img    | string  | 否       | ""                | 输入图片，url形式，若有即为i2i(图生图)，无即为t2i(文生图)。必须是通过/api/v1b/upload_img或 /api/v1b/upload_imgs 上传后的图片地址        |
-| add_prompt | bool     | 否       | false                | 是否使用gpt进行描述词优化, 开启优化生图速度会有一定影响          |
-| cn_configs | array     | 否       | null                | controlnet配置，包括权重、图片，见示例. 支持的cn从 /api/v1b/cn/artist 或 /api/v1b/cn/opensource中获取. 权重范围为 0~2, 图片为通过upload_img/upload_imgs接口上传的图片地址，最多支持传入3个cn|
-| lora_configs | array     | 否       | null                | lora配置， 包括lora模型、权重， 见示例. versionid从 /api/v1b/models/private 或 /api/v1b/models/lora中获取. 权重范围为 0~2 |
 
-> ***注意***：
+> **_注意_**：
+>  
 > 1. 开源和自研模型的controlnet支持不一样，可以通过 /api/v1b/cn/artist 和 /api/v1b/cn/opensource获取自研和开源模型支持的cn
 > 2. 只有基模型才能作为初始模型，可以通过 /api/v1b/models/base获取基模型， 目前支持一层lora，多层不生效
 
-请求示例
 
+请求示例
 
 **curl 示例**
 
-~~~
+```
 curl https://miaohua.sensetime.com/api/v1b/task_submit \
   -H "Content-Type: application/json" \
   -d '{
@@ -104,11 +102,11 @@ curl https://miaohua.sensetime.com/api/v1b/task_submit \
       {"cn": "openpose", "img": "https://ossxxxxxx.png", "weight": 1}
     }
   }'
-~~~
+```
 
 **python示例**
 
-~~~python
+```python
 import requests
 
 url = 'https://miaohua.sensetime.com/api/v1b/task_submit'
@@ -137,10 +135,93 @@ response = requests.post(url, json=data)
 
 print(response.status_code)
 print(response.text)
-~~~
+```
+#### 
+
+**controlnet 参数示例**
+```json
+{
+        "cn": "tile", //['canny','lineart',..]
+        "weight": 0.3,
+        "guidance_start": 0.1, //  0-1 默认0
+        "guidance_end": 0.9, //  0-1 默认1
+        "img": "https://bkmk.oss-accelerate.aliyuncs.com/35c82400-52c8-11ee-817a-1e719ed4d673.png?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317054673034&Signature=X1A%2Bhnro0l0TmLOWKknlBckJhok%3D",
+        "config": {//config可选，针对特定cn支持配置
+            "control_processor": "tile_resample",
+            "down_sample_rate": 1 // , tile需要 浮点数两位小数,默认1,范围1-8
+        }
+}
+```
+**以下为cn现在支持的内置config 参数, 存在差异，按照文档调用**
+```json
+{
+        "cn": "canny",
+        "weight": 0.3,
+        "guidance_start": 0.1, //  0-1 默认0
+        "guidance_end": 0.9, //  0-1 默认1
+        "img": "https://bkmk.oss-accelerate.aliyuncs.com/35c82400-52c8-11ee-817a-1e719ed4d673.png?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317054673034&Signature=X1A%2Bhnro0l0TmLOWKknlBckJhok%3D",
+        "config": {
+            "control_processor": "canny",//canny invert
+            "low_threshold":1,// 1-255,
+            "high_threshold": 1,// 1-255,
+        }
+}
+{
+        "cn": "lineart",
+        "weight": 0.3,
+        "guidance_start": 0.1, //  0-1 默认0
+        "guidance_end": 0.9, //  0-1 默认1
+        "img": "https://bkmk.oss-accelerate.aliyuncs.com/35c82400-52c8-11ee-817a-1e719ed4d673.png?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317054673034&Signature=X1A%2Bhnro0l0TmLOWKknlBckJhok%3D",
+        "config": {
+            "control_processor": "lineart_realistic",//'lineart_realistic','lineart_coarse','lineart_standard','invert'
+        }
+}
+{
+        "cn": "lineart_anime",
+        "weight": 0.3,
+        "guidance_start": 0.1, //  0-1 默认0
+        "guidance_end": 0.9, //  0-1 默认1
+        "img": "https://bkmk.oss-accelerate.aliyuncs.com/35c82400-52c8-11ee-817a-1e719ed4d673.png?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317054673034&Signature=X1A%2Bhnro0l0TmLOWKknlBckJhok%3D",
+        "config": {
+            "control_processor": "lineart_anime" or "lineart_anime_denoise",
+        }
+}
+{
+        "cn": "openpose",
+        "weight": 0.3,
+        "guidance_start": 0.1, //  0-1 默认0
+        "guidance_end": 0.9, //  0-1 默认1
+        "img": "https://bkmk.oss-accelerate.aliyuncs.com/35c82400-52c8-11ee-817a-1e719ed4d673.png?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317054673034&Signature=X1A%2Bhnro0l0TmLOWKknlBckJhok%3D",
+        "config": {
+            "control_processor": "dw_openpose_full,
+            /*['dw_openpose_full',
+                'openpose',
+                'openpose_face',
+                'openpose_faceonly',
+                'openpose_full',
+                'openpose_hand',]*/
+        }
+}
+{
+        "cn": "tile",
+        "weight": 0.3,
+        "guidance_start": 0.1, //  0-1 默认0
+        "guidance_end": 0.9, //  0-1 默认1
+        "img": "https://bkmk.oss-accelerate.aliyuncs.com/35c82400-52c8-11ee-817a-1e719ed4d673.png?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317054673034&Signature=X1A%2Bhnro0l0TmLOWKknlBckJhok%3D",
+        "config": {
+            "control_processor": "tile_colorfix,
+            /*['tile_colorfix',
+              'tile_colorfix_sharp',
+              'tile_resample',]*/
+            "down_sample_rate":1,//1-8
+
+        }
+}
+```
+
 
 **多cn 示例**
-~~~ JSON
+```json
 {
     "token": "",
     "lora_configs": [],
@@ -170,9 +251,7 @@ print(response.text)
         "guidance_start": 0.2, //  0-1 默认0
         "guidance_end": 0.8, //  0-1 默认1
         "img": "https://bkmk.oss-accelerate.aliyuncs.com/35c82400-52c8-11ee-817a-1e719ed4d673.png?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317054673034&Signature=X1A%2Bhnro0l0TmLOWKknlBckJhok%3D",
-        "config": {
-            "control_processor": "None"
-        }
+      
     }]
 }
 {
@@ -197,71 +276,52 @@ print(response.text)
         "img": "https://bkmk.oss-accelerate.aliyuncs.com/aaa2d68e-52c4-11ee-817a-1e719ed4d673.png?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317054671512&Signature=hUkZUXxJ1eHCwgQ4m0UiWz%2BaC6o%3D",
         "config": {
             "control_processor": "canny",
-            "preprocessor_resolution": "512", // 64-2048 默认512
-            "pixel_perfect": false, //  默认false
-            "control_mode": "balanced", //  不用配置，默认 balanced   "balanced" or "control_is_more_important"
-            // "Resize Mode": "Crop and Resize", // 不用配置，默认Crop and Resize
             "low_threshold": 100, // , canny需要 范围1-255，默认100
             "high_threshold": 200 // , canny需要 范围1-255，默认200
         }
-    }, {
-        "cn": "depth",
-        "weight": 0.9,
-        "guidance_start": 0, //  0-1 默认0
-        "guidance_end": 1, //  0-1 默认1
-        "img": "https://bkmk.oss-accelerate.aliyuncs.com/c6996632-52c4-11ee-817a-1e719ed4d673.png?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317054671559&Signature=6QUz0hfQT7RmxM0EMzQKitE%2FMnY%3D",
-        "config": {
-            "control_processor": "depth_midas"
-        }
-    }]
+    	}]
 }
-~~~
-
+```
 
 返回示例
 
-
-~~~json
+```json
 {
     "task_id": "f3e5b59c-7416-11ed-a160-00163e025c94", # string 任务id
 }
-~~~
+```
 
 ### 结果查询
 
-
 请求地址
 
-
-> POST       https://miaohua.sensetime.com/api/v1b/task_result
+> POST       [https://miaohua.sensetime.com/api/v1b/task_result](https://miaohua.sensetime.com/api/v1b/task_result)
 
 
 请求参数
 
-
-| 参数名称 | 类型   | 是否必须 | 默认值 | 含义                                |
-| -------- | ------ | -------- | ------ | -------------------------------|
-| task_id  | string | 是       | 无      | 由任务创建接口返回的任务id         |
-| token    | string | 是       | 无      | 由get_token获取的token          |
+| 参数名称 | 类型 | 是否必须 | 默认值 | 含义 |
+| --- | --- | --- | --- | --- |
+| task_id | string | 是 | 无 | 由任务创建接口返回的任务id |
+| token | string | 是 | 无 | 由get_token获取的token |
 
 
 请求示例
 
-
 **curl 示例**
 
-~~~
+```
 curl https://miaohua.sensetime.com/api/v1b/task_result \
   -H "Content-Type: application/json" \
   -d '{
         "task_id": "f3e5b59c-7416-11ed-a160-00163e025c94",
         "token": "",
   }'
-~~~
+```
 
 **python示例**
 
-~~~python
+```python
 import requests
 
 url = 'https://miaohua.sensetime.com/api/v1b/task_result'
@@ -274,13 +334,11 @@ response = requests.post(url, json=data)
 
 print(response.status_code)
 print(response.text)
-~~~
-
+```
 
 返回示例
 
-
-~~~json
+```json
 {
     "state": "done", # string 任务状态，未完成会是 "pending"
     'images': [
@@ -315,36 +373,30 @@ print(response.text)
     ],, # list 图片路径
     "error_msg": "Intern error", # string 错误信息
 }
-~~~
-
+```
 
 ### 批量结果查询
 
-
 请求地址
 
-
-> POST       https://miaohua.sensetime.com/api/v1b/task_results
+> POST       [https://miaohua.sensetime.com/api/v1b/task_results](https://miaohua.sensetime.com/api/v1b/task_results)
 
 
 请求参数
 
-
 - 一次可获取多个任务的结果，一次最多不超过50个任务
 - 接口上限为6次/秒，根据实际情况调用
-
-| 参数名称 | 类型   | 是否必须 | 默认值 | 含义                                |
-| -------- | ------ | -------- | ------ | -------------------------------|
-| task_ids  | list | 是       | 无      | 由任务创建接口返回的任务id数组       |
-| token    | string | 是       | 无      | 由get_token获取的token          |
+| 参数名称 | 类型 | 是否必须 | 默认值 | 含义 |
+| --- | --- | --- | --- | --- |
+| task_ids | list | 是 | 无 | 由任务创建接口返回的任务id数组 |
+| token | string | 是 | 无 | 由get_token获取的token |
 
 
 请求示例
 
-
 **curl 示例**
 
-~~~
+```
 curl https://miaohua.sensetime.com/api/v1b/task_results \
   -H "Content-Type: application/json" \
   -d '{
@@ -353,11 +405,11 @@ curl https://miaohua.sensetime.com/api/v1b/task_results \
         ],
         "token": "",
   }'
-~~~
+```
 
 **python示例**
 
-~~~python
+```python
 import requests
 
 url = 'https://miaohua.sensetime.com/api/v1b/task_results'
@@ -370,13 +422,11 @@ response = requests.post(url, json=data)
 
 print(response.status_code)
 print(response.text)
-~~~
-
+```
 
 返回示例
 
-
-~~~json
+```json
 {
     "code": 0,
     "info": [
@@ -397,32 +447,28 @@ print(response.text)
       {...}
     ]
 }
-~~~
+```
 
 ### 图生文 img2txt (同步接口)
 
-
 请求地址
 
-
-> POST       https://miaohua.sensetime.com/api/v1b/img2txt
+> POST       [https://miaohua.sensetime.com/api/v1b/img2txt](https://miaohua.sensetime.com/api/v1b/img2txt)
 
 
 请求参数
 
-
-| 参数名称 | 类型   | 是否必须 | 默认值 | 含义                                |
-| -------- | ------ | -------- | ------ | -------------------------------|
-| init_img  | string | 是       | 无      | 初始图片路径                    |
-| token    | string | 是       | 无      | 由get_token获取的token          |
+| 参数名称 | 类型 | 是否必须 | 默认值 | 含义 |
+| --- | --- | --- | --- | --- |
+| init_img | string | 是 | 无 | 初始图片路径 |
+| token | string | 是 | 无 | 由get_token获取的token |
 
 
 请求示例
 
-
 **python示例**
 
-~~~python
+```python
 import requests
 
 url = 'https://miaohua.sensetime.com/api/v1b/img2txt'
@@ -434,37 +480,32 @@ data = {
 response = requests.post(url, json=data)
 
 print(response.json())
-~~~
-
+```
 
 返回示例
 
-
-~~~json
+```json
 {
   "code": 0,
   "info": "a very large clock tower with many other buildings behind it", # 图生文返回信息
   "msg": ""
 }
-~~~
+```
 
 ### 获取生成表单
 
-> GET       https://miaohua.sensetime.com/api/v1b/get_generation_form
+> GET       [https://miaohua.sensetime.com/api/v1b/get_generation_form](https://miaohua.sensetime.com/api/v1b/get_generation_form)
 
 
 请求参数
 
-
 无
-
 
 请求示例
 
-
 **python示例**
 
-~~~python
+```python
 import requests
 
 url = 'https://miaohua.sensetime.com/api/v1b/get_generation_form'
@@ -473,12 +514,11 @@ response = requests.get(url)
 
 print(response.status_code)
 print(response.text)
-~~~
-
+```
 
 返回示例
 
-~~~json
+```json
 {
   "code": 0,
   "info": [
@@ -569,32 +609,28 @@ print(response.text)
   ],
   "msg": ""
 }
-
-~~~
-
+```
 
 ### 获取模型：基模型
+
 获取公开的基模型
 
 请求地址
 
-
-> POST       https://miaohua.sensetime.com/api/v1b/models/base
+> POST       [https://miaohua.sensetime.com/api/v1b/models/base](https://miaohua.sensetime.com/api/v1b/models/base)
 
 
 请求参数
 
-
-| 参数名称     | 类型     | 是否必须  | 默认值              | 含义                                                      |
-| ----------- | --------| -------  | ----------------- | --------------------------------------------------------- |
-| token       | string  | 是       | 无，通过get_token获得 | 通过get_token获取的token                                  |
-| page        | int     | 否       | 1，第几页 | 第几页                                  |
-| per_page    | int     | 否       | 20，每页数量 | 每页数量                                 |
-| query       | string  | 否       | 无，查询 | 通过模型名、tag等过滤                                  |
+| 参数名称 | 类型 | 是否必须 | 默认值 | 含义 |
+| --- | --- | --- | --- | --- |
+| token | string | 是 | 无，通过get_token获得 | 通过get_token获取的token |
+| page | int | 否 | 1，第几页 | 第几页 |
+| per_page | int | 否 | 20，每页数量 | 每页数量 |
+| query | string | 否 | 无，查询 | 通过模型名、tag等过滤 |
 
 
 请求示例
-
 
 **python示例**
 
@@ -609,9 +645,7 @@ print(response.status_code)
 print(response.text)
 ```
 
-
 返回示例
-
 
 ```json
 {
@@ -639,29 +673,27 @@ print(response.text)
 ```
 
 ### 获取模型：LoRA模型
+
 获取公开的LoRA模型, 可跟基模型lora merge
 
 请求地址
 
+> POST       [https://miaohua.sensetime.com/api/v1b/models/lora](https://miaohua.sensetime.com/api/v1b/models/lora)
 
-> POST       https://miaohua.sensetime.com/api/v1b/models/lora
 
-***注意： 目前数据正在补齐中，自定义的lora可以同 api/v1b/models/private中获取***
-
+**_注意： 目前数据正在补齐中，自定义的lora可以同 api/v1b/models/private中获取_**
 
 请求参数
 
-
-| 参数名称     | 类型     | 是否必须  | 默认值              | 含义                                                      |
-| ----------- | --------| -------  | ----------------- | --------------------------------------------------------- |
-| token       | string  | 是       | 无，通过get_token获得 | 通过get_token获取的token                                  |
-| page        | int     | 否       | 1，第几页 | 第几页                                  |
-| per_page    | int     | 否       | 20，每页数量 | 每页数量                                 |
-| query       | string  | 否       | 无，查询 | 通过模型名、tag等过滤                                  |
+| 参数名称 | 类型 | 是否必须 | 默认值 | 含义 |
+| --- | --- | --- | --- | --- |
+| token | string | 是 | 无，通过get_token获得 | 通过get_token获取的token |
+| page | int | 否 | 1，第几页 | 第几页 |
+| per_page | int | 否 | 20，每页数量 | 每页数量 |
+| query | string | 否 | 无，查询 | 通过模型名、tag等过滤 |
 
 
 请求示例
-
 
 **python示例**
 
@@ -676,9 +708,7 @@ print(response.status_code)
 print(response.text)
 ```
 
-
 返回示例
-
 
 ```json
 {
@@ -704,28 +734,27 @@ print(response.text)
     "msg": ""
 }
 ```
+
 ### 获取模型：私有模型(用户上传/训练)
+
 获取自己上传/训练的LoRA模型, 可跟基模型lora merge
 
 请求地址
 
-
-> POST       https://miaohua.sensetime.com/api/v1b/models/private
+> POST       [https://miaohua.sensetime.com/api/v1b/models/private](https://miaohua.sensetime.com/api/v1b/models/private)
 
 
 请求参数
 
-
-| 参数名称     | 类型     | 是否必须  | 默认值              | 含义                                                      |
-| ----------- | --------| -------  | ----------------- | --------------------------------------------------------- |
-| token       | string  | 是       | 无，通过get_token获得 | 通过get_token获取的token                                  |
-| page        | int     | 否       | 1，第几页 | 第几页                                  |
-| per_page    | int     | 否       | 20，每页数量 | 每页数量                                 |
-| query       | string  | 否       | 无，查询 | 通过模型名、tag等过滤                                  |
+| 参数名称 | 类型 | 是否必须 | 默认值 | 含义 |
+| --- | --- | --- | --- | --- |
+| token | string | 是 | 无，通过get_token获得 | 通过get_token获取的token |
+| page | int | 否 | 1，第几页 | 第几页 |
+| per_page | int | 否 | 20，每页数量 | 每页数量 |
+| query | string | 否 | 无，查询 | 通过模型名、tag等过滤 |
 
 
 请求示例
-
 
 **python示例**
 
@@ -740,9 +769,7 @@ print(response.status_code)
 print(response.text)
 ```
 
-
 返回示例
-
 
 ```json
 {
@@ -770,24 +797,22 @@ print(response.text)
 ```
 
 ### 获取Controlnet列表: Artist
+
 获取自研模型支持的controlnet列表， 可用于推理生图控制
 
 请求地址
 
-
-> POST       https://miaohua.sensetime.com/api/v1b/cn/artist
+> POST       [https://miaohua.sensetime.com/api/v1b/cn/artist](https://miaohua.sensetime.com/api/v1b/cn/artist)
 
 
 请求参数
 
-
-| 参数名称     | 类型     | 是否必须  | 默认值              | 含义                                                      |
-| ----------- | --------| -------  | ----------------- | --------------------------------------------------------- |
-| token       | string  | 是       | 无，通过get_token获得 | 通过get_token获取的token                                  |
+| 参数名称 | 类型 | 是否必须 | 默认值 | 含义 |
+| --- | --- | --- | --- | --- |
+| token | string | 是 | 无，通过get_token获得 | 通过get_token获取的token |
 
 
 请求示例
-
 
 **python示例**
 
@@ -802,9 +827,7 @@ print(response.status_code)
 print(response.text)
 ```
 
-
 返回示例
-
 
 ```json
 {
@@ -822,25 +845,24 @@ print(response.text)
     "msg": ""
 }
 ```
+
 ### 获取Controlnet列表: 开源
+
 获取开源模型支持的controlnet列表， 可用于推理生图控制
 
 请求地址
 
-
-> POST       https://miaohua.sensetime.com/api/v1b/cn/opensource
+> POST       [https://miaohua.sensetime.com/api/v1b/cn/opensource](https://miaohua.sensetime.com/api/v1b/cn/opensource)
 
 
 请求参数
 
-
-| 参数名称     | 类型     | 是否必须  | 默认值              | 含义                                                      |
-| ----------- | --------| -------  | ----------------- | --------------------------------------------------------- |
-| token       | string  | 是       | 无，通过get_token获得 | 通过get_token获取的token                                  |
+| 参数名称 | 类型 | 是否必须 | 默认值 | 含义 |
+| --- | --- | --- | --- | --- |
+| token | string | 是 | 无，通过get_token获得 | 通过get_token获取的token |
 
 
 请求示例
-
 
 **python示例**
 
@@ -855,9 +877,7 @@ print(response.status_code)
 print(response.text)
 ```
 
-
 返回示例
-
 
 ```json
 {
@@ -876,32 +896,28 @@ print(response.text)
 }
 ```
 
-
 ## 以下为训练相关
 
 ### 上传图片
 
 请求地址
 
-
-> POST       https://miaohua.sensetime.com/api/v1b/upload_img
-> Authorization: Bearer token_string
+> POST       [https://miaohua.sensetime.com/api/v1b/upload_img](https://miaohua.sensetime.com/api/v1b/upload_img)
+Authorization: Bearer token_string
 
 
 请求参数
 
-
-| 参数名称     | 类型     | 是否必须  | 默认值              | 含义                               |
-| ----------- | --------| -------  | ----------------- | -----------------------------------|
-| init_img    | file    | 是        | 无                 | 图片文件,为单个，以'init_img'为key|
+| 参数名称 | 类型 | 是否必须 | 默认值 | 含义 |
+| --- | --- | --- | --- | --- |
+| init_img | file | 是 | 无 | 图片文件,为单个，以'init_img'为key |
 
 
 请求示例
 
-
 **python示例**
 
-~~~python
+```python
 import requests
 
 url = 'https://miaohua.sensetime.com/api/v1b/upload_imgs'
@@ -912,13 +928,11 @@ response = requests.post(url, files=files, headers=headers)
 
 print(response.status_code)
 print(response.json())
-~~~
-
+```
 
 返回示例
 
-
-~~~json
+```json
 {
   "code": 0,
   "info": [
@@ -926,33 +940,30 @@ print(response.json())
   ],
   "msg": ""
 }
-~~~
+```
 
 ### 批量上传图片
 
 请求地址
 
-
 **20230809更新：header中添加Authorization 以识别身份, 在未来版本中将会移除file token**
 
-> POST       https://miaohua.sensetime.com/api/v1b/upload_imgs
-> Authorization: Bearer token_string
+> POST       [https://miaohua.sensetime.com/api/v1b/upload_imgs](https://miaohua.sensetime.com/api/v1b/upload_imgs)
+Authorization: Bearer token_string
 
 
 请求参数
 
-
-| 参数名称     | 类型     | 是否必须  | 默认值              | 含义                               |
-| ----------- | --------| -------  | ----------------- | -----------------------------------|
-| init_img    | file    | 是        | 无                 | 图片文件,可以多个，都以'init_img'为key|
+| 参数名称 | 类型 | 是否必须 | 默认值 | 含义 |
+| --- | --- | --- | --- | --- |
+| init_img | file | 是 | 无 | 图片文件,可以多个，都以'init_img'为key |
 
 
 请求示例
 
-
 **python示例**
 
-~~~python
+```python
 import requests
 
 url = 'https://miaohua.sensetime.com/api/v1b/upload_imgs'
@@ -966,13 +977,11 @@ response = requests.post(url, files=files, headers=headers)
 
 print(response.status_code)
 print(response.json())
-~~~
-
+```
 
 返回示例
 
-
-~~~json
+```json
 {
   "code": 0,
   "info": [
@@ -981,32 +990,30 @@ print(response.json())
   ],
   "msg": ""
 }
-~~~
+```
 
 ### 创建数据集
 
 请求地址
 
-> POST       https://miaohua.sensetime.com/api/v1b/dataset
+> POST       [https://miaohua.sensetime.com/api/v1b/dataset](https://miaohua.sensetime.com/api/v1b/dataset)
 
 
 请求参数
 
-
-| 参数名称     | 类型     | 是否必须  | 默认值              | 含义                                                       |
-| ----------- | --------| -------  | ----------------- | ---------------------------------------------------------- |
-| token       | string  | 是       | 无，通过get_token获得 | 通过get_token获取的token                                   |
-| name        | string  | 是       | 无                  | 数据集名称                                                  |
-| description | string  | 否       | ""                |  数据集描述                                                   |
-| images      | list    | 是       | 无                 | 图片列表, url list，可通过批量上传图片接口/api/v1b/upload_imgs获取|
+| 参数名称 | 类型 | 是否必须 | 默认值 | 含义 |
+| --- | --- | --- | --- | --- |
+| token | string | 是 | 无，通过get_token获得 | 通过get_token获取的token |
+| name | string | 是 | 无 | 数据集名称 |
+| description | string | 否 | "" | 数据集描述 |
+| images | list | 是 | 无 | 图片列表, url list，可通过批量上传图片接口/api/v1b/upload_imgs获取 |
 
 
 请求示例
 
-
 **python示例**
 
-~~~python
+```python
 import requests
 
 url = 'https://miaohua.sensetime.com/api/v1b/dataset'
@@ -1024,43 +1031,40 @@ response = requests.post(url, json=data)
 
 print(response.status_code)
 print(response.text)
-~~~
-
+```
 
 返回示例
 
-
-~~~json
+```json
 {'code': 0, 'info': {'dataset_id': 11}, 'msg': ''}
-~~~
+```
 
 ### 获取已创建的全部数据集
 
 请求地址
 
-> POST       https://miaohua.sensetime.com/api/v1b/dataset_all?page=1
+> POST       [https://miaohua.sensetime.com/api/v1b/dataset_all?page=1](https://miaohua.sensetime.com/api/v1b/dataset_all?page=1)
+
 
 url参数
 
-| 参数名称  | 类型     | 是否必须 | 默认值           | 含义                  |
-|-------| --------|------|---------------|---------------------|
-| page  | string  | 否    |               | 第几页                 |
+| 参数名称 | 类型 | 是否必须 | 默认值 | 含义 |
+| --- | --- | --- | --- | --- |
+| page | string | 否 |  | 第几页 |
+
 
 请求参数
 
-
-| 参数名称  | 类型     | 是否必须 | 默认值           | 含义                  |
-|-------| --------|------|---------------|---------------------|
-| token | string  | 是    | 无，通过get_token获得 | 通过get_token获取的token |
-
+| 参数名称 | 类型 | 是否必须 | 默认值 | 含义 |
+| --- | --- | --- | --- | --- |
+| token | string | 是 | 无，通过get_token获得 | 通过get_token获取的token |
 
 
 请求示例
 
-
 **python示例**
 
-~~~python
+```python
 import requests
 
 url = 'https://miaohua.sensetime.com/api/v1b/dataset_all'
@@ -1072,13 +1076,11 @@ response = requests.post(url, json=data)
 
 print(response.status_code)
 print(response.text)
-~~~
-
+```
 
 返回示例
 
-
-~~~json
+```json
 {
   "items": [
     {
@@ -1113,27 +1115,25 @@ print(response.text)
   "has_prev": false,
   "totalPages": 1
 }
-~~~
+```
 
 ### 数据集中添加图片
 
 请求地址
 
-> POST       https://miaohua.sensetime.com/api/v1b/dataset/add_images
+> POST       [https://miaohua.sensetime.com/api/v1b/dataset/add_images](https://miaohua.sensetime.com/api/v1b/dataset/add_images)
 
 
 请求参数
 
-
-| 参数名称     | 类型     | 是否必须  | 默认值              | 含义                                                       |
-| ----------- | --------| -------  | ----------------- | ---------------------------------------------------------- |
-| token       | string  | 是       | 无，通过get_token获得 | 通过get_token获取的token                                   |
-| images      | array   | 是       | 无，图片列表 | 通过upload_img和upload_imgs得到的oss 图片链接                         |
-| dataset      | int   | 是       | 无，dataset id| 通过/api/v1b/dataset_all获取                        |
+| 参数名称 | 类型 | 是否必须 | 默认值 | 含义 |
+| --- | --- | --- | --- | --- |
+| token | string | 是 | 无，通过get_token获得 | 通过get_token获取的token |
+| images | array | 是 | 无，图片列表 | 通过upload_img和upload_imgs得到的oss 图片链接 |
+| dataset | int | 是 | 无，dataset id | 通过/api/v1b/dataset_all获取 |
 
 
 请求示例
-
 
 **python示例**
 
@@ -1155,10 +1155,10 @@ print(response.status_code)
 print(response.text)
 ```
 
-
 返回示例
 
 成功
+
 ```json
 {
     "code": 0,
@@ -1166,7 +1166,9 @@ print(response.text)
     "msg": "OK"
 }
 ```
+
 失败
+
 ```json
 {
   "code": 400,
@@ -1177,24 +1179,21 @@ print(response.text)
 
 ### 数据集中删除图片
 
-
 请求地址
 
-> POST       https://miaohua.sensetime.com/api/v1b/dataset/delete_images
+> POST       [https://miaohua.sensetime.com/api/v1b/dataset/delete_images](https://miaohua.sensetime.com/api/v1b/dataset/delete_images)
+
 
 请求参数
 
-
-| 参数名称     | 类型     | 是否必须  | 默认值              | 含义                                                       |
-| ----------- | --------| -------  | ----------------- | ---------------------------------------------------------- |
-| token       | string  | 是       | 无，通过get_token获得 | 通过get_token获取的token                                   |
-| images      | array   | 是       | 无，图片列表 | 通过upload_img和upload_imgs得到的oss 图片链接                         |
-| dataset      | int   | 是       | 无，dataset id| 通过/api/v1b/dataset_all获取                        |
-
+| 参数名称 | 类型 | 是否必须 | 默认值 | 含义 |
+| --- | --- | --- | --- | --- |
+| token | string | 是 | 无，通过get_token获得 | 通过get_token获取的token |
+| images | array | 是 | 无，图片列表 | 通过upload_img和upload_imgs得到的oss 图片链接 |
+| dataset | int | 是 | 无，dataset id | 通过/api/v1b/dataset_all获取 |
 
 
 请求示例
-
 
 **python示例**
 
@@ -1216,10 +1215,10 @@ print(response.status_code)
 print(response.text)
 ```
 
-
 返回示例
 
 成功
+
 ```json
 {
     "code": 0,
@@ -1227,7 +1226,9 @@ print(response.text)
     "msg": "OK"
 }
 ```
+
 失败
+
 ```json
 {
   "code": 400,
@@ -1238,34 +1239,30 @@ print(response.text)
 
 ### 提交训练任务
 
-
 请求地址
 
-
-> POST       https://miaohua.sensetime.com/api/v1b/train_submit
+> POST       [https://miaohua.sensetime.com/api/v1b/train_submit](https://miaohua.sensetime.com/api/v1b/train_submit)
 
 
 请求参数
 
-
-| 参数名称     | 类型     | 是否必须  | 默认值              | 含义                                                      |
-| ----------- | --------| -------  | ----------------- | --------------------------------------------------------- |
-| token       | string  | 是       | 无，通过get_token获得 | 通过get_token获取的token                                  |
-| name        | string  | 是       | 无                  | 需要训练的模型名称                                          |
-| description | string  | 否       | ""                | 训练的模型描述                                               |
-| base_model  | string  | 否       | 自动选择            | 训练所需要的基本模型，可选模型范围通过/api/v1b/train_form获取    |
-| trigger_word | string | 否       | ""                 | 触发词                                                     |
-| main_body   | string  | 是       | "Style"           | 主体，可选范围通过/api/v1b/train_form获取                     |
-| nsfw        | int     | 是       | 0                 | 是否nsfw，0为true,1为false                                  |
-| dataset     | list    | 是       | 无                | 训练所选的数据集id的list,需要先创建数据集                       |
+| 参数名称 | 类型 | 是否必须 | 默认值 | 含义 |
+| --- | --- | --- | --- | --- |
+| token | string | 是 | 无，通过get_token获得 | 通过get_token获取的token |
+| name | string | 是 | 无 | 需要训练的模型名称 |
+| description | string | 否 | "" | 训练的模型描述 |
+| base_model | string | 否 | 自动选择 | 训练所需要的基本模型，可选模型范围通过/api/v1b/train_form获取 |
+| trigger_word | string | 否 | "" | 触发词 |
+| main_body | string | 是 | "Style" | 主体，可选范围通过/api/v1b/train_form获取 |
+| nsfw | int | 是 | 0 | 是否nsfw，0为true,1为false |
+| dataset | list | 是 | 无 | 训练所选的数据集id的list,需要先创建数据集 |
 
 
 请求示例
 
-
 **python示例**
 
-~~~python
+```python
 import requests
 
 url = 'https://miaohua.sensetime.com/api/v1b/train_submit'
@@ -1284,40 +1281,34 @@ response = requests.post(url, json=data)
 
 print(response.status_code)
 print(response.text)
-~~~
-
+```
 
 返回示例
 
-
-~~~json
+```json
 {'code': 0, 'info': {'task_id': 'xxxxx'}, 'msg': ''}
-~~~
+```
 
 ### 获取训练进度
 
-
 请求地址
 
-
-> POST       https://miaohua.sensetime.com/api/v1b/train_progress
+> POST       [https://miaohua.sensetime.com/api/v1b/train_progress](https://miaohua.sensetime.com/api/v1b/train_progress)
 
 
 请求参数
 
-
-| 参数名称     | 类型     | 是否必须  | 默认值              | 含义                                                      |
-| ----------- | --------| -------  | ----------------- | --------------------------------------------------------- |
-| token       | string  | 是       | 无，通过get_token获得 | 通过get_token获取的token                                  |
-| task_id     | string  | 是       | 无                  | 训练任务的task_id                                         |
+| 参数名称 | 类型 | 是否必须 | 默认值 | 含义 |
+| --- | --- | --- | --- | --- |
+| token | string | 是 | 无，通过get_token获得 | 通过get_token获取的token |
+| task_id | string | 是 | 无 | 训练任务的task_id |
 
 
 请求示例
 
-
 **python示例**
 
-~~~python
+```python
 import requests
 
 url = 'https://miaohua.sensetime.com/api/v1b/train_progress'
@@ -1330,38 +1321,32 @@ response = requests.post(url, json=data)
 
 print(response.status_code)
 print(response.text)
-~~~
-
+```
 
 返回示例
 
-
-~~~json
+```json
 {'create_time': '2023-05-08 14:22:52', 'description': 'train model1 description', 'main_body': 'Style', 'model_name': 'train_model1', 'state': 'done', 'training_progress': 1.0, 'trigger_word': 'one girl'}
-~~~
+```
+
 返回训练state为状态，training_progress为进度(0-1)，状态为'done'后，可通过之前的生成接口生成图片，模型的model_name取训练时取的名字。
 
 ### 获取训练表单字段
 
-
 请求地址
 
-
-> GET       https://miaohua.sensetime.com/api/v1b/get_train_form
+> GET       [https://miaohua.sensetime.com/api/v1b/get_train_form](https://miaohua.sensetime.com/api/v1b/get_train_form)
 
 
 请求参数
 
-
 无
-
 
 请求示例
 
-
 **python示例**
 
-~~~python
+```python
 import requests
 
 url = 'https://miaohua.sensetime.com/api/v1b/get_train_form'
@@ -1370,13 +1355,11 @@ response = requests.get(url)
 
 print(response.status_code)
 print(response.text)
-~~~
-
+```
 
 返回示例
 
-
-~~~json
+```json
 {
   "code": 0,
   "info": {
@@ -1394,6 +1377,6 @@ print(response.text)
   },
   "msg": ""
 }
-~~~
-主要是base_model和main_body这两个字段。
+```
 
+主要是base_model和main_body这两个字段。
