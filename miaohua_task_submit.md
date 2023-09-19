@@ -655,13 +655,13 @@ print(response.text)
         "models": [
             {
                 "author": "xxx",
-                "base_model": "",
+                "base_model": "xxxx",
                 "demo_picture": "https://bkmk.oss-accelerate.aliyuncs.com/8b53e958-374e-11ee-9f88-00163e253f9a_00001_XvYNa9vW_raw.jpeg?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317051652108&Signature=4NyJBRoZk86xleogKqp9ud3M60U%3D",
                 "description": "",
                 "is_opensource": true,
-                "model_id": 5,
-                "model_name": "Baby Roy盲盒",
-                "tag": "LORA",
+                "model_id": xx,
+                "model_name": "meinamix_meinaV11",
+                "tag": "upload",
                 "versionid": "xxx"
             }
         ],
@@ -737,7 +737,7 @@ print(response.text)
 
 ### 获取模型：私有模型(用户上传/训练)
 
-获取自己上传/训练的LoRA模型, 可跟基模型lora merge
+获取自己上传的基模型/LoRA模型、训练的LoRA模型, 可跟基模型lora merge
 
 请求地址
 
@@ -1249,12 +1249,11 @@ print(response.text)
 | 参数名称 | 类型 | 是否必须 | 默认值 | 含义 |
 | --- | --- | --- | --- | --- |
 | token | string | 是 | 无，通过get_token获得 | 通过get_token获取的token |
-| name | string | 是 | 无 | 需要训练的模型名称 |
+| name | string | 是 | 无 | 训练的LoRA模型名称 |
 | description | string | 否 | "" | 训练的模型描述 |
-| base_model | string | 否 | 自动选择 | 训练所需要的基本模型，可选模型范围通过/api/v1b/train_form获取 |
+| base_model | string | 否 | 系统指定 | 训练所需要的基本模型，可选模型范围通过/api/v1b/get_train_form获取 |
 | trigger_word | string | 否 | "" | 触发词 |
-| main_body | string | 是 | "Style" | 主体，可选范围通过/api/v1b/train_form获取 |
-| nsfw | int | 是 | 0 | 是否nsfw，0为true,1为false |
+| main_body | string | 是 | "Style" | 主体， ["Style", "Human", "Architecture", "Plants", "Animals"] |
 | dataset | list | 是 | 无 | 训练所选的数据集id的list,需要先创建数据集 |
 
 
@@ -1273,7 +1272,6 @@ data = {
     "base_model": "自动选择", # 基模型
     "trigger_word": "one girl", # 触发词
     "main_body": "Style", # 主体
-    "nsfw": 0, # 1为true, 0为false
     "dataset": [5, 7], # 选择的数据集的id组合，list
 }
 
@@ -1331,7 +1329,7 @@ print(response.text)
 
 返回训练state为状态，training_progress为进度(0-1)，状态为'done'后，可通过之前的生成接口生成图片，模型的model_name取训练时取的名字。
 
-### 获取训练表单字段
+### 获取可供训练的基模列表
 
 请求地址
 
