@@ -12,9 +12,6 @@ def get_token(email, password):
         password: 用户密码
     返回状态码: 
         0: success
-        600: user not found
-        601: password not correct
-        602: user is not a business user
     返回值:
         {'token': string}
     """
@@ -44,11 +41,6 @@ def task_submit(token, model_name='Artist v0.3.0 Beta', prompt="one girl", neg_p
 
     返回状态码: 
         0: success
-        600: user not found or token error
-        603: you have too many tasks running
-        604: points not enough
-        501: Server connection error
-        500: Intern Error
     返回值:
         {'task_id': string}
     """
