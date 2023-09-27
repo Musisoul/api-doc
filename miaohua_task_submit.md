@@ -387,11 +387,12 @@ print(response.text)
 
 - 一次可获取多个任务的结果，一次最多不超过50个任务
 - 接口上限为6次/秒，根据实际情况调用
+
 | 参数名称 | 类型 | 是否必须 | 默认值 | 含义 |
 | --- | --- | --- | --- | --- |
 | task_ids | list | 是 | 无 | 由任务创建接口返回的任务id数组 |
 | token | string | 是 | 无 | 由get_token获取的token |
-| sensitive_limit_value | float | 否 | 无 | 0-1，设置敏感图片鉴定阈值，越大代表越严格|
+| sensitive_limit_value | float | 否 | 无 | 0-1，设置敏感图片鉴定阈值，越大代表越严格 |
 
 
 请求示例
