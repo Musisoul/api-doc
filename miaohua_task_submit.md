@@ -304,7 +304,7 @@ print(response.text)
 | --- | --- | --- | --- | --- |
 | task_id | string | 是 | 无 | 由任务创建接口返回的任务id |
 | token | string | 是 | 无 | 由get_token获取的token |
-| sensitive_limit_value | float | 否 | 无 | 0-1，设置敏感图片鉴定阈值，越大代表越严格|
+| sensitive_limit_value | float | 否 | 0 | 0-1，设置敏感图片鉴定阈值，越大代表越严格，0采用系统默认标准|
 
 
 请求示例
@@ -392,7 +392,7 @@ print(response.text)
 | --- | --- | --- | --- | --- |
 | task_ids | list | 是 | 无 | 由任务创建接口返回的任务id数组 |
 | token | string | 是 | 无 | 由get_token获取的token |
-| sensitive_limit_value | float | 否 | 无 | 0-1，设置敏感图片鉴定阈值，越大代表越严格 |
+| sensitive_limit_value | float | 否 | 0 | 0-1，设置敏感图片鉴定阈值，越大代表越严格, 0采用系统默认标准|
 
 
 请求示例
