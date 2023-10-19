@@ -371,7 +371,9 @@ print(response.text)
             'share': false,
             'shareable': true,
         },
-    ],, # list 图片路径
+    ], # list 图片路径
+    "select_seed": 8206464,#种子数
+      
     "error_msg": "Intern error", # string 错误信息
 }
 ```
@@ -446,6 +448,7 @@ print(response.text)
                 "save_index": 0
             }
         ],
+        "select_seed": 8206464,#种子数
       },
       {...}
     ]
