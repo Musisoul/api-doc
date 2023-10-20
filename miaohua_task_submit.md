@@ -1,5 +1,5 @@
 > [!WARNING]  
-> 🔴❗Warning❗🔴 调用模型请改用versionid字段( 可通过/api/v1b/models/base获得对应versionid)。❗❗将在2024年05月删除对model_name字段支持❗❗
+> 🔴❗Warning❗🔴 生图任务调用模型请改用versionid字段( 可通过/api/v1b/models/base获得对应versionid)。❗❗将在2024年05月删除对model_name字段支持❗❗
 
 ## 图片生成(i2i,t2i) 接口
 
