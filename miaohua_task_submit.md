@@ -64,7 +64,7 @@ print(response.text)
 | strength | float | 是 | 0.6 | 图片控制力度(0-1), 同Image weight |
 | ddim_steps | int | 否 | 50 | 迭代步数 |
 | select_seed | int | 否 | -1 | 随机数种子 |
-| output_size | string | 是 | 960x960 | 图片的输出尺寸，如："960x960",长度范围可选640-6144，宽度范围可选640-6144|
+| output_size | string | 文生图是,图生图否 | 960x960 | 图片的输出尺寸，如："960x960",长度范围可选640-6144，宽度范围可选640-6144|
 | init_img | string | 否 | "" | 输入图片，url形式，若有即为i2i(图生图)，无即为t2i(文生图)。必须是通过/api/v1b/upload_img或 /api/v1b/upload_imgs 上传后的图片地址 |
 | add_prompt | bool | 否 | false | 是否使用gpt进行描述词优化, 开启优化生图速度会有一定影响 |
 | cn_configs | array | 否 | null | controlnet配置，包括权重、图片，见示例. 支持的cn从 /api/v1b/cn/artist 或 /api/v1b/cn/opensource中获取. 权重范围为 0~2, 图片为通过upload_img/upload_imgs接口上传的图片地址，最多支持传入3个cn |
