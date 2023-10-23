@@ -1,6 +1,7 @@
 ## 注意事项
 > [!WARNING]  
 > 🔴❗Warning❗🔴 生图任务调用模型请改用versionid字段( 可通过/api/v1b/models/base获得对应versionid)。❗❗将在2024年05月删除对model_name字段支持❗❗
+> 🔴❗Warning❗🔴 调用模型训练请改用base_model_version字段❗❗将在2024年05月删除对model_name字段支持❗❗
 
 ## 图片生成(i2i,t2i) 接口
 
@@ -1262,7 +1263,8 @@ print(response.text)
 | token | string | 是 | 无，通过get_token获得 | 通过get_token获取的token |
 | name | string | 是 | 无 | 训练的LoRA模型名称 |
 | description | string | 否 | "" | 训练的模型描述 |
-| base_model | string | 否 | 系统指定 | 训练所需要的基本模型，可选模型范围通过/api/v1b/get_train_form获取 |
+| base_model | string | 否 | 系统指定 |🔴❗Warning❗🔴 调用模型训练请改用base_model_version字段， 训练所需要的基本模型，可选模型范围通过/api/v1b/get_train_form获取 |
+| base_model_version | string | 否 | 系统指定 | 训练所需要的基本模型versionid，可选模型范围通过/api/v1b/get_train_form获取 |
 | trigger_word | string | 否 | "" | 触发词 |
 | main_body | string | 是 | "Style" | 主体， ["Style", "Human", "Architecture", "Plants", "Animals"] |
 | dataset | list | 是 | 无 | 训练所选的数据集id的list,需要先创建数据集 |
