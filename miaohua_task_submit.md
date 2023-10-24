@@ -3,7 +3,8 @@
 > 🔴❗Warning❗🔴 生图任务调用模型请改用versionid字段( 可通过/api/v1b/models/base获得对应versionid)。❗❗将在2024年05月删除对model_name字段支持❗❗
 > [!WARNING]  
 > 🔴❗Warning❗🔴 调用模型训练请改用base_model_version字段❗❗将在2024年05月删除对model_name字段支持❗❗
-
+> [!WARNING]  
+> 🔴❗Warning❗🔴 图生文已经下线，不支持调用
 ## 图片生成(i2i,t2i) 接口
 
 ### 获取token
@@ -462,7 +463,7 @@ print(response.text)
 }
 ```
 
-### 图生文 img2txt (同步接口)
+### 图生文 img2txt (已下线，不再支持调用，同步接口)
 
 请求地址
 
