@@ -1,5 +1,7 @@
 ## 注意事项
 > [!WARNING]  
+> 🔴❗Warning❗🔴 生图任务产生的图片，请及时自行下载保存。
+> [!WARNING]  
 > 🔴❗Warning❗🔴 生图任务调用模型请改用versionid字段( 可通过/api/v1b/models/base获得对应versionid)。❗❗将在2024年05月删除对model_name字段支持❗❗
 > [!WARNING]  
 > 🔴❗Warning❗🔴 调用模型训练请改用base_model_version字段❗❗将在2024年05月删除对model_name字段支持❗❗
