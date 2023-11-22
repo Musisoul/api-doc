@@ -465,49 +465,6 @@ print(response.text)
 }
 ```
 
-### 图生文 img2txt (已下线，不再支持调用，同步接口)
-
-请求地址
-
-> POST       [https://miaohua.sensetime.com/api/v1b/img2txt](https://miaohua.sensetime.com/api/v1b/img2txt)
-
-
-请求参数
-
-| 参数名称 | 类型 | 是否必须 | 默认值 | 含义 |
-| --- | --- | --- | --- | --- |
-| init_img | string | 是 | 无 | 初始图片路径 |
-| token | string | 是 | 无 | 由get_token获取的token |
-
-
-请求示例
-
-**python示例**
-
-```python
-import requests
-
-url = 'https://miaohua.sensetime.com/api/v1b/img2txt'
-data = {
-    "init_img": "https://bkmk.oss-accelerate.aliyuncs.com/900ea63e-e1dd-11ed-bef5-00163e005161?OSSAccessKeyId=LTAI5tPynodLHeacT1J5SmWh&Expires=317042257726&Signature=x7nUVN6xpDustx4K02WOTjuty4Q%3D", # 初始图片url
-    "token": "", # get_token获取的token
-}
-
-response = requests.post(url, json=data)
-
-print(response.json())
-```
-
-返回示例
-
-```json
-{
-  "code": 0,
-  "info": "a very large clock tower with many other buildings behind it", # 图生文返回信息
-  "msg": ""
-}
-```
-
 ### 获取生成表单
 
 > GET       [https://miaohua.sensetime.com/api/v1b/get_generation_form](https://miaohua.sensetime.com/api/v1b/get_generation_form)
