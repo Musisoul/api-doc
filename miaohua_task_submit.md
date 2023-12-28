@@ -64,7 +64,6 @@ print(response.text)
 | 参数名称 | 类型 | 是否必须 | 默认值 | 含义 |
 | --- | --- | --- | --- | --- |
 | token | string | 是 | 无，通过get_token获得 | 通过get_token获取的token |
-| model_name （废弃，使用versionid）| string | 否 | Artist v0.3.0 Beta | 🔴❗Warning❗🔴 模型名称(可选值: 可通过/api/v1b/models/base获得) 参数存在隐患，现阶段支持只提交model_name，versionid为空，将在202405删除对model_name字段支持|
 | versionid | string | 是 | sgl_artist_v0.3.5_0925 | 新增字段，模型版本id( 可通过/api/v1b/models/base获得对应versionid) versionid必须提交|
 | prompt | string | 是 | "" | 用于生成图片的特征描述，如："one girl,beautiful" |
 | neg_prompt | string | 否 | "" | 特征的反向描述，一般无需指定 |
