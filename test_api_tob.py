@@ -23,13 +23,13 @@ def get_token(email, password):
     return response
 
 
-def task_submit(token, model_name='Artist v0.3.0 Beta', prompt="one girl", neg_prompt="", n_images=2,
+def task_submit(token, versionid='sgl_artist_v0.3.5_0925', prompt="one girl", neg_prompt="", n_images=2,
                    scale=7, output_size="960x960", select_seed=-1, init_img="", controlnet_model=""):
     """
     发起任务
     params: 
         token: 用户token
-        model_name: 模型名称
+        versionid: 模型id
         prompt: 描述
         neg_prompt: 反向描述
         n_images: 生成数量
@@ -46,7 +46,7 @@ def task_submit(token, model_name='Artist v0.3.0 Beta', prompt="one girl", neg_p
     """
     data = {
         "token": token,
-        "model_name": model_name,
+        "versionid": versionid,
         "prompt": prompt,
         "neg_prompt": neg_prompt,
         "n_images": n_images,
