@@ -77,13 +77,14 @@ print(response.text)
 | add_prompt | bool | 否 | false | 是否使用gpt进行描述词优化, 开启优化生图速度会有一定影响 |
 | cn_configs | array | 否 | null | controlnet配置，包括权重、图片，见示例. 支持的cn从 /api/v1b/cn/artist 或 /api/v1b/cn/opensource中获取. 权重范围为 0~2, 图片为通过upload_img/upload_imgs接口上传的图片地址，最多支持传入3个cn |
 | lora_configs | array | 否 | null | lora配置， 包括lora模型、权重， 见示例. versionid从 /api/v1b/models/private 或 /api/v1b/models/lora中获取. 权重范围为 0~2 |
+| outpaint_config | dict | 否 | null | 扩图配置， 见示例{"src_img": url,"outpaint_ratio": 1.5,"align_position": "middle"}. src_img为上传的img url，outpaint_ratio取值范围是[1.5, 1.25, 2], align_position为topleft，topmiddle，topright，middleleft，middle，middleright，bottomleft，bottommiddle，bottomright |
 
 
 > **_注意_**：
 >  
 > 1. 开源和自研模型的controlnet支持不一样，可以通过 /api/v1b/cn/artist 和 /api/v1b/cn/opensource获取自研和开源模型支持的cn
 > 2. 只有基模型才能作为初始模型，可以通过 /api/v1b/models/base获取基模型， 目前支持一层lora，多层不生效
-
+> 3. 设置outpaint_config无需提供versionid，versionid设置无效
 
 请求示例
 
@@ -297,6 +298,48 @@ print(response.text)
 ```json
 {
     "task_id": "f3e5b59c-7416-11ed-a160-00163e025c94", # string 任务id
+}
+```
+
+**outpaint 示例**
+
+```json
+ {
+        "token": token,
+        "lora_configs": [],
+        "add_prompt": False,
+        "ddim_steps": 5,
+        "init_img": "",
+        "n_images": 2,
+        "scale": 7,
+        "select_seed": -1,
+        "enable_lcm": 1,
+        "output_size": "1024x1024",
+        "cn_configs": [],
+        # "model_name": "Artist v0.4.0 Beta",
+        "outpaint_config": {
+            "src_img": url,
+            "outpaint_ratio": 1.5,
+            "align_position": "middle"
+        }
+    }
+```
+
+**Artist 3.5 Turbo生图加速示例**
+```json
+{
+        "n_images": 1,
+        "neg_prompt": "(NSFW:1.5), ((deformed iris, deformed pupils:1.4), ((bad art)),((ugly)),beard, text, image noise, close up, cropped, out of frame, worst quality, low quality, jpeg artifacts, watermark, duplicate, morbid, mutilated, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed, blurry, dehydrated, bad anatomy, bad proportions, extra limbs, cloned face, disfigured, gross proportions, malformed limbs, missing arms, missing legs, extra arms, extra legs, fused fingers, too many fingers, long neck, malformed limbs, missing arms, missing legs, extra arms, extra legs, fused fingers, too many fingers, long neck",
+        "select_seed": 1,
+        "strength": 0.5,
+        "output_size": "640x640",
+        "scale": 1.2, //3.5turbo建议1.2
+        "add_prompt": "false",
+        "token": token,
+        "init_img": "",
+        "versionid": "sgl_artist_v0.3.5_turbo",//使用该模型进行生图加速
+        "ddim_steps": 5,//3.5turbo建议5，步数高生图时间增加
+        "prompt": "女孩"
 }
 ```
 
