@@ -173,7 +173,7 @@ print(response.text)
         "config": {
             "control_processor": "canny",//canny invert
             "low_threshold":1,// 1-255,
-            "high_threshold": 1,// 1-255,
+            "high_threshold": 255,// 1-255,
         }
 }
 {
