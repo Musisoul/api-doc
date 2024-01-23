@@ -13,7 +13,7 @@
 
 请求地址
 
-> POST   [https://miaohua.sensetime.com/api/v1b/get_token](https://miaohua.sensetime.com/api/v1b/get_token)
+> POST   [https://miaohua.sensetime.com/api/v1b/get_token](https://miaohua.sensetime.com/api/v1b/get_token)
 
 
 请求参数
@@ -56,7 +56,7 @@ print(response.text)
 
 请求地址
 
-> POST   [https://miaohua.sensetime.com/api/v1b/task_submit](https://miaohua.sensetime.com/api/v1b/task_submit)
+> POST   [https://miaohua.sensetime.com/api/v1b/task_submit](https://miaohua.sensetime.com/api/v1b/task_submit)
 
 
 请求参数
@@ -347,7 +347,7 @@ print(response.text)
 
 请求地址
 
-> POST       [https://miaohua.sensetime.com/api/v1b/task_result](https://miaohua.sensetime.com/api/v1b/task_result)
+> POST       [https://miaohua.sensetime.com/api/v1b/task_result](https://miaohua.sensetime.com/api/v1b/task_result)
 
 
 请求参数
@@ -434,7 +434,7 @@ print(response.text)
 
 请求地址
 
-> POST       [https://miaohua.sensetime.com/api/v1b/task_results](https://miaohua.sensetime.com/api/v1b/task_results)
+> POST       [https://miaohua.sensetime.com/api/v1b/task_results](https://miaohua.sensetime.com/api/v1b/task_results)
 
 
 请求参数
@@ -509,7 +509,7 @@ print(response.text)
 
 ### 获取生成表单
 
-> GET       [https://miaohua.sensetime.com/api/v1b/get_generation_form](https://miaohua.sensetime.com/api/v1b/get_generation_form)
+> GET       [https://miaohua.sensetime.com/api/v1b/get_generation_form](https://miaohua.sensetime.com/api/v1b/get_generation_form)
 
 
 请求参数
@@ -632,7 +632,7 @@ print(response.text)
 
 请求地址
 
-> POST       [https://miaohua.sensetime.com/api/v1b/models/base](https://miaohua.sensetime.com/api/v1b/models/base)
+> POST       [https://miaohua.sensetime.com/api/v1b/models/base](https://miaohua.sensetime.com/api/v1b/models/base)
 
 
 请求参数
@@ -686,6 +686,58 @@ print(response.text)
     "msg": ""
 }
 ```
+### 获取基模对应的controlnet
+
+请求地址
+
+> GET       [https://miaohua.sensetime.com/api/v1b/cn/list](https://miaohua.sensetime.com/api/v1b/cn/list)
+
+
+请求参数
+
+| 参数名称      | 类型 | 是否必须 | 默认值          | 含义            |
+|-----------| --- | --- |--------------|---------------|
+| versionid | string | 是 | 无，通过模型列表接口获得 | 模型对应versionid |
+
+
+请求示例
+
+**python示例**
+
+```python
+import requests
+
+url = 'https://miaohua.sensetime.com/api/v1b/cn/list'
+
+response = requests.post(url, json={"token": "token", "versionid":"sgl_artist_v0.3.5"})
+print(response.status_code)
+print(response.text)
+```
+
+```commandline
+curl -X POST -H "Content-Type: application/json" -d '{"token": "token", "versionid": "sgl_artist_v0.3.5"}' https://miaohua.sensetime.com/api/v1b/cn/list
+
+```
+返回示例
+
+```json
+{
+   "code":0,
+   "info":[
+      {
+         "can_preview":true,
+         "demo_picture":"https://bkmksh.oss-accelerate.aliyuncs.com/87533f22-7950-11ee-b6cd-feb5979cd666.jpeg?OSSAccessKeyId=LTAI5t8GmQec8vxNsiGKcYBT&Expires=317058909727&Signature=UZnEAF%2BMT3kdR1A3Cvi6%2Bigk76U%3D",
+         "demo_preview":"None",
+         "demo_result":"https://bkmksh.oss-accelerate.aliyuncs.com/8340ac46-464a-11ee-b722-00163e253f9a.jpeg?OSSAccessKeyId=LTAI5t8GmQec8vxNsiGKcYBT&Expires=317058657961&Signature=Jl%2FicV94gpmeiLO3g8A7ShqUqRM%3D",
+         "desc":"图像转换：根据用户输入的文本指令，对用户上传的图片进行编辑，转换图片中的部分元素。",
+         "local_name":"图像转换",
+         "name":"ip2p"
+      }
+   ],
+   "msg":""
+}
+```
+
 
 ### 获取模型：LoRA模型
 
@@ -693,7 +745,7 @@ print(response.text)
 
 请求地址
 
-> POST       [https://miaohua.sensetime.com/api/v1b/models/lora](https://miaohua.sensetime.com/api/v1b/models/lora)
+> POST       [https://miaohua.sensetime.com/api/v1b/models/lora](https://miaohua.sensetime.com/api/v1b/models/lora)
 
 
 **_注意： 目前数据正在补齐中，自定义的lora可以同 api/v1b/models/private中获取_**
@@ -711,7 +763,6 @@ print(response.text)
 请求示例
 
 **python示例**
-
 ```python
 import requests
 
@@ -756,7 +807,7 @@ print(response.text)
 
 请求地址
 
-> POST       [https://miaohua.sensetime.com/api/v1b/models/private](https://miaohua.sensetime.com/api/v1b/models/private)
+> POST       [https://miaohua.sensetime.com/api/v1b/models/private](https://miaohua.sensetime.com/api/v1b/models/private)
 
 
 请求参数
@@ -817,7 +868,7 @@ print(response.text)
 
 请求地址
 
-> POST       [https://miaohua.sensetime.com/api/v1b/cn/artist](https://miaohua.sensetime.com/api/v1b/cn/artist)
+> POST       [https://miaohua.sensetime.com/api/v1b/cn/artist](https://miaohua.sensetime.com/api/v1b/cn/artist)
 
 
 请求参数
@@ -867,7 +918,7 @@ print(response.text)
 
 请求地址
 
-> POST       [https://miaohua.sensetime.com/api/v1b/cn/opensource](https://miaohua.sensetime.com/api/v1b/cn/opensource)
+> POST       [https://miaohua.sensetime.com/api/v1b/cn/opensource](https://miaohua.sensetime.com/api/v1b/cn/opensource)
 
 
 请求参数
@@ -917,7 +968,7 @@ print(response.text)
 
 请求地址
 
-> POST       [https://miaohua.sensetime.com/api/v1b/upload_img](https://miaohua.sensetime.com/api/v1b/upload_img)
+> POST       [https://miaohua.sensetime.com/api/v1b/upload_img](https://miaohua.sensetime.com/api/v1b/upload_img)
 Authorization: Bearer token_string
 
 
@@ -963,7 +1014,7 @@ print(response.json())
 
 **20230809更新：header中添加Authorization 以识别身份, 在未来版本中将会移除file token**
 
-> POST       [https://miaohua.sensetime.com/api/v1b/upload_imgs](https://miaohua.sensetime.com/api/v1b/upload_imgs)
+> POST       [https://miaohua.sensetime.com/api/v1b/upload_imgs](https://miaohua.sensetime.com/api/v1b/upload_imgs)
 Authorization: Bearer token_string
 
 
@@ -1011,7 +1062,7 @@ print(response.json())
 
 请求地址
 
-> POST       [https://miaohua.sensetime.com/api/v1b/dataset](https://miaohua.sensetime.com/api/v1b/dataset)
+> POST       [https://miaohua.sensetime.com/api/v1b/dataset](https://miaohua.sensetime.com/api/v1b/dataset)
 
 
 请求参数
@@ -1058,7 +1109,7 @@ print(response.text)
 
 请求地址
 
-> POST       [https://miaohua.sensetime.com/api/v1b/dataset_all?page=1](https://miaohua.sensetime.com/api/v1b/dataset_all?page=1)
+> POST       [https://miaohua.sensetime.com/api/v1b/dataset_all?page=1](https://miaohua.sensetime.com/api/v1b/dataset_all?page=1)
 
 
 url参数
@@ -1136,7 +1187,7 @@ print(response.text)
 
 请求地址
 
-> POST       [https://miaohua.sensetime.com/api/v1b/dataset/add_images](https://miaohua.sensetime.com/api/v1b/dataset/add_images)
+> POST       [https://miaohua.sensetime.com/api/v1b/dataset/add_images](https://miaohua.sensetime.com/api/v1b/dataset/add_images)
 
 
 请求参数
@@ -1196,7 +1247,7 @@ print(response.text)
 
 请求地址
 
-> POST       [https://miaohua.sensetime.com/api/v1b/dataset/delete_images](https://miaohua.sensetime.com/api/v1b/dataset/delete_images)
+> POST       [https://miaohua.sensetime.com/api/v1b/dataset/delete_images](https://miaohua.sensetime.com/api/v1b/dataset/delete_images)
 
 
 请求参数
@@ -1256,7 +1307,7 @@ print(response.text)
 
 请求地址
 
-> POST       [https://miaohua.sensetime.com/api/v1b/train_submit](https://miaohua.sensetime.com/api/v1b/train_submit)
+> POST       [https://miaohua.sensetime.com/api/v1b/train_submit](https://miaohua.sensetime.com/api/v1b/train_submit)
 
 
 请求参数
@@ -1307,7 +1358,7 @@ print(response.text)
 
 请求地址
 
-> POST       [https://miaohua.sensetime.com/api/v1b/train_progress](https://miaohua.sensetime.com/api/v1b/train_progress)
+> POST       [https://miaohua.sensetime.com/api/v1b/train_progress](https://miaohua.sensetime.com/api/v1b/train_progress)
 
 
 请求参数
@@ -1349,7 +1400,7 @@ print(response.text)
 
 请求地址
 
-> GET       [https://miaohua.sensetime.com/api/v1b/get_train_form](https://miaohua.sensetime.com/api/v1b/get_train_form)
+> GET       [https://miaohua.sensetime.com/api/v1b/get_train_form](https://miaohua.sensetime.com/api/v1b/get_train_form)
 
 
 请求参数
@@ -1394,3 +1445,4 @@ print(response.text)
 ```
 
 主要是base_model和main_body这两个字段。
+
